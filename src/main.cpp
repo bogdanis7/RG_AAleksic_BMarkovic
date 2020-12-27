@@ -361,20 +361,33 @@
 #include <iostream>
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-void processInput(GLFWwindow *window);
+void processInput1(GLFWwindow *window);
+void processInput2(GLFWwindow *window);
+
 void mouse_callback1(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
+
+void key_callback1(GLFWwindow* window, int keu, int stancode, int action, int mods);
+void key_callback2(GLFWwindow* window, int keu, int stancode, int action, int mods);
 
 // settings
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
+std::string src;
+std::string dest;
+
+bool ind=true;
+
 //TODO kameru treba mozda preko klase (ako ima potrebe, lepota...)
 //pocetna
 //TODO mozda drugacija pocetna pozicija kamere
 glm::vec3 camPosition=glm::vec3(0.0f, 0.5f, 3.0f);
-glm::vec3 camFront=glm::vec3(0.0f, 0.0f, -1.0f);
+glm::vec3 camFront=glm::vec3(0.0f, -1.0f, 0.0f);
 glm::vec3 camUp=glm::vec3(0.0f, 1.0f, 0.0f);
+
+std::string prvi;
+std::string drugi;
 
 bool firstMouse = true;
 float yaw   = -90.0f;
@@ -417,6 +430,8 @@ int main()
     glfwSetCursorPosCallback(window, mouse_callback1);
     glfwSetScrollCallback(window, scroll_callback);
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSetKeyCallback(window, key_callback1);
+
 
     // glad: load all OpenGL function pointers
     // ---------------------------------------
@@ -582,7 +597,7 @@ int main()
         lastFrame = currentFrame;
         // input
         // -----
-        processInput(window);
+        processInput1(window);
 
         // render
         // ------
@@ -672,25 +687,27 @@ int main()
 
 // process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
 // ---------------------------------------------------------------------------------------------------------
-void processInput(GLFWwindow *window)
+void processInput1(GLFWwindow *window)
 {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
 
     //camera movement (we need global variables for camera)
     float camSpeed=deltaTime*1.5f;
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+    if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
         camPosition += camSpeed * camFront;
-    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+    if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
         camPosition -= camSpeed * camFront;
-    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+    if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
         //normalizacijom dobijamo right vektor
         //ulevo
         camPosition -= glm::normalize(glm::cross(camFront, camUp)) * camSpeed;
-    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+    if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
         //udesno
         camPosition += glm::normalize(glm::cross(camFront, camUp)) * camSpeed;
+
 }
+
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
 // ---------------------------------------------------------------------------------------------
@@ -741,4 +758,146 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
         fov = 1.0f;
     if (fov > 45.0f)
         fov = 45.0f;
+}
+
+//uzima redom ulaz sa tastature i kada se formira jedan string od 2 karaktera, postavi globalnu promenljivu koja figura treba da se pomeri (src),
+//a zatim na koje polje treba (dest)
+void key_callback1(GLFWwindow* window, int key, int scancode, int action, int mods){
+    if(ind==true) { //ako je true, treba nam src
+        if (key == GLFW_KEY_A and action == GLFW_PRESS) {
+            src = "A";
+        }
+        if (key == GLFW_KEY_B and action == GLFW_PRESS) {
+            src = "B";
+        }
+        if (key == GLFW_KEY_C and action == GLFW_PRESS) {
+            src = "C";
+        }
+        if (key == GLFW_KEY_D and action == GLFW_PRESS) {
+            src = "D";
+        }
+        if (key == GLFW_KEY_E and action == GLFW_PRESS) {
+            src = "E";
+        }
+        if (key == GLFW_KEY_F and action == GLFW_PRESS) {
+            src = "F";
+
+        }
+        if (key == GLFW_KEY_G and action == GLFW_PRESS) {
+            src = "G";
+        }
+        if (key == GLFW_KEY_H and action == GLFW_PRESS) {
+            src = "H";
+        }
+        if (key == GLFW_KEY_1 and action == GLFW_PRESS) {
+            src += "1";
+            std::cout << src << std::endl;
+            ind=false;
+        }
+        if (key == GLFW_KEY_2 and action == GLFW_PRESS) {
+            src += "2";
+            std::cout << src << std::endl;
+            ind=false;
+        }
+        if (key == GLFW_KEY_3 and action == GLFW_PRESS) {
+            src += "3";
+            std::cout << src << std::endl;
+            ind=false;
+        }
+        if (key == GLFW_KEY_4 and action == GLFW_PRESS) {
+            src += "4";
+            std::cout << src << std::endl;
+            ind=false;
+        }
+        if (key == GLFW_KEY_5 and action == GLFW_PRESS) {
+            src += "5";
+            std::cout << src << std::endl;
+            ind=false;
+        }
+        if (key == GLFW_KEY_6 and action == GLFW_PRESS) {
+            src += "6";
+            std::cout << src << std::endl;
+            ind=false;
+        }
+        if (key == GLFW_KEY_7 and action == GLFW_PRESS) {
+            src += "7";
+            std::cout << src << std::endl;
+            ind=false;
+        }
+        if (key == GLFW_KEY_8 and action == GLFW_PRESS) {
+            src += "8";
+            std::cout << src << std::endl;
+            ind=false;
+        }
+    }
+//---------------------------------------------------
+    else { //ako je false, treba nam dest
+        if (key == GLFW_KEY_A and action == GLFW_PRESS) {
+            dest = "A";
+        }
+        if (key == GLFW_KEY_B and action == GLFW_PRESS) {
+            dest = "B";
+        }
+        if (key == GLFW_KEY_C and action == GLFW_PRESS) {
+            dest = "C";
+        }
+        if (key == GLFW_KEY_D and action == GLFW_PRESS) {
+            dest = "D";
+        }
+        if (key == GLFW_KEY_E and action == GLFW_PRESS) {
+            dest = "E";
+        }
+        if (key == GLFW_KEY_F and action == GLFW_PRESS) {
+            dest = "F";
+
+        }
+        if (key == GLFW_KEY_G and action == GLFW_PRESS) {
+            dest = "G";
+        }
+        if (key == GLFW_KEY_H and action == GLFW_PRESS) {
+            dest = "H";
+        }
+        if (key == GLFW_KEY_1 and action == GLFW_PRESS) {
+            dest += "1";
+            std::cout << dest << std::endl;
+            ind=true;
+        }
+        if (key == GLFW_KEY_2 and action == GLFW_PRESS) {
+            dest += "2";
+            std::cout << dest << std::endl;
+            ind=true;
+        }
+        if (key == GLFW_KEY_3 and action == GLFW_PRESS) {
+            dest += "3";
+            std::cout << dest << std::endl;
+            ind=true;
+        }
+        if (key == GLFW_KEY_4 and action == GLFW_PRESS) {
+            dest += "4";
+            std::cout << dest << std::endl;
+            ind=true;
+        }
+        if (key == GLFW_KEY_5 and action == GLFW_PRESS) {
+            dest += "5";
+            std::cout << dest << std::endl;
+            ind=true;
+        }
+        if (key == GLFW_KEY_6 and action == GLFW_PRESS) {
+            dest += "6";
+            std::cout << dest << std::endl;
+            ind=true;
+        }
+        if (key == GLFW_KEY_7 and action == GLFW_PRESS) {
+            dest += "7";
+            std::cout << dest << std::endl;
+            ind=true;
+        }
+        if (key == GLFW_KEY_8 and action == GLFW_PRESS) {
+            dest += "8";
+            std::cout << dest << std::endl;
+            ind=true;
+        }
+    }
+
+
 }
