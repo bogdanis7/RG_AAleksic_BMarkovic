@@ -5,14 +5,15 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include<vector>
-#include<string>
+#include <vector>
+#include <string>
 #include <learnopengl/filesystem.h>
 #include <learnopengl/shader_m.h>
 #include <learnopengl/model.h>
 #include <iostream>
 #include "Figure.h"
-#include"Figure.cpp"
+#include "Figure.cpp"
+
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void mouse_button_callback(GLFWwindow* window, double xpos, double ypos);
 void key_callback1(GLFWwindow* window, int key, int scancode, int action, int mods);
@@ -49,6 +50,8 @@ map<string,Figure*> mapafigurica;
 // timing
 float deltaTime = 0.0f;    // time between current frame and last frame
 float lastFrame = 0.0f;
+
+glm::vec3 lightPos(7.0f, 4.0f, 2.0f);
 
 glm::vec3 cubePositions[] = {
             glm::vec3(0.0f, 0.0f, 0.0f),
@@ -164,9 +167,6 @@ glm::vec3 cubePositions[] = {
            cout << mapa["G6"][0] << mapa["G6"][1] << mapa["G6"][2] << endl;
 
 
-
-
-
 #ifdef __APPLE__
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
@@ -202,6 +202,10 @@ glm::vec3 cubePositions[] = {
         glEnable(GL_DEPTH_TEST);
         // stbi_set_flip_vertically_on_load(true);
         // build and compile our shader zprogram
+        //tekstura i svetlo
+        Shader boardShader("resources/shaders/board.vs", "resources/shaders/board.fs");
+        Shader lightShader("resources/shaders/light.vs", "resources/shaders/light.fs");
+
         // ------------------------------------
         Shader figureShader("resources/shaders/1.model_loading.vs", "resources/shaders/1.model_loading.fs");
         Shader ourShader("resources/shaders/field.vs", "resources/shaders/field.fs");
@@ -253,14 +257,24 @@ glm::vec3 cubePositions[] = {
         };
         // world space positions of our cubes
 
+        float texture_vertices[] = {
+                //pozicije            //normale            //koordinate teksture
+                -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
+                0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  0.0f,
+                0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
+                0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
+                -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  1.0f,
+                -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
+        };
 
-        unsigned int VBO, VAO;
-        glGenVertexArrays(1, &VAO);
-        glGenBuffers(1, &VBO);
 
-        glBindVertexArray(VAO);
+        unsigned int VBO1, fieldsVAO;
+        glGenVertexArrays(1, &fieldsVAO);
+        glGenBuffers(1, &VBO1);
 
-        glBindBuffer(GL_ARRAY_BUFFER, VBO);
+        glBindVertexArray(fieldsVAO);
+
+        glBindBuffer(GL_ARRAY_BUFFER, VBO1);
         glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
         // position attribute
@@ -270,58 +284,102 @@ glm::vec3 cubePositions[] = {
         glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *) (3 * sizeof(float)));
         glEnableVertexAttribArray(1);
 
+        unsigned int lightVAO;
+        glGenVertexArrays(1, &lightVAO);
+        glBindVertexArray(lightVAO);
+        glBindBuffer(GL_ARRAY_BUFFER, VBO1);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+        glEnableVertexAttribArray(0);
+
+
+        //tekstura za veliki kvadrat
+
+        unsigned int VBO2, boardVAO;
+        glGenVertexArrays(1, &boardVAO);
+        glGenBuffers(1, &VBO2);
+
+        glBindBuffer(GL_ARRAY_BUFFER, VBO2);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(texture_vertices), texture_vertices, GL_STATIC_DRAW);
+
+        glBindVertexArray(boardVAO);
+        // pozicija
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+        glEnableVertexAttribArray(0);
+        // normale
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+        glEnableVertexAttribArray(1);
+        //tekstura
+        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8*sizeof(float), (void*)(6*sizeof(float)));
+        glEnableVertexAttribArray(2);
+
+
+
+
 
         // load and create a texture
         // -------------------------
-//        unsigned int texture1, texture2;
-//        // texture 1
-//        // ---------
-//        glGenTextures(1, &texture1);
-//        glBindTexture(GL_TEXTURE_2D, texture1);
-//        // set the texture wrapping parameters
-//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-//        // set texture filtering parameters
-//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-//        // load image, create texture and generate mipmaps
-//        int width, height, nrChannels;
-//        stbi_set_flip_vertically_on_load(true); // tell stb_image.h to flip loaded texture's on the y-axis.
-//        unsigned char *data = stbi_load(FileSystem::getPath("resources/textures/container.jpg").c_str(), &width,
-//                                        &height, &nrChannels, 0);
-//        if (data) {
-//            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-//            glGenerateMipmap(GL_TEXTURE_2D);
-//        } else {
-//            std::cout << "Failed to load texture" << std::endl;
-//        }
-//        stbi_image_free(data);
-//        // texture 2
-//        // ---------
-//        glGenTextures(1, &texture2);
-//        glBindTexture(GL_TEXTURE_2D, texture2);
-//        // set the texture wrapping parameters
-//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-//        // set texture filtering parameters
-//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-//        // load image, create texture and generate mipmaps
-//        data = stbi_load(FileSystem::getPath("resources/textures/awesomeface.png").c_str(), &width, &height,
-//                         &nrChannels, 0);
-//        if (data) {
-//            // note that the awesomeface.png has transparency and thus an alpha channel, so make sure to tell OpenGL the data type is of GL_RGBA
-//            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-//            glGenerateMipmap(GL_TEXTURE_2D);
-//        } else {
-//            std::cout << "Failed to load texture" << std::endl;
-//        }
-//        stbi_image_free(data);
-        // tell opengl for each sampler to which texture unit it belongs to (only has to be done once)
-        // -------------------------------------------------------------------------------------------
-//        ourShader.use();
-//        ourShader.setInt("texture1", 0);
-//        ourShader.setInt("texture2", 1);
+
+        //TODO funkcija za ucitavanje tekstura
+        unsigned int diffuseMap;
+        // texture 1
+        // ---------
+        glGenTextures(1, &diffuseMap);
+        glBindTexture(GL_TEXTURE_2D, diffuseMap);
+        // set the texture wrapping parameters
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+        // set texture filtering parameters
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        // load image, create texture and generate mipmaps
+        int width, height, nrChannels;
+        stbi_set_flip_vertically_on_load(true); // tell stb_image.h to flip loaded texture's on the y-axis.
+        unsigned char *data = stbi_load(FileSystem::getPath("resources/textures/chess4.png").c_str(), &width, &height, &nrChannels, 0);
+        if (data)
+        {
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+            glGenerateMipmap(GL_TEXTURE_2D);
+        }
+        else
+        {
+            std::cout << "Failed to load texture" << std::endl;
+        }
+        stbi_image_free(data);
+
+
+
+        boardShader.use();
+        boardShader.setInt("diffuse", 0);
+
+        //tekstura za podlogu
+        unsigned int texture2;
+        glGenTextures(1, &texture2);
+        glBindTexture(GL_TEXTURE_2D, texture2);
+        // set the texture wrapping parameters
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// set texture wrapping to GL_REPEAT (default wrapping method)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        // set texture filtering parameters
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        // load image, create texture and generate mipmaps
+        data = stbi_load(FileSystem::getPath("resources/textures/chess4.png").c_str(), &width, &height, &nrChannels, 0);
+        if (data)
+        {
+            // note that the awesomeface.png has transparency and thus an alpha channel, so make sure to tell OpenGL the data type is of GL_RGBA
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+            glGenerateMipmap(GL_TEXTURE_2D);
+        }
+        else
+        {
+            std::cout << "Failed to load texture" << std::endl;
+        }
+        stbi_image_free(data);
+
+
+        ourShader.use();
+        ourShader.setInt("texture2", 1);
+
+
 
         // render loop
         // -----------
@@ -341,28 +399,79 @@ glm::vec3 cubePositions[] = {
             glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            // bind textures on corresponding texture units
-//            glActiveTexture(GL_TEXTURE0);
-//            glBindTexture(GL_TEXTURE_2D, texture1);
-//            glActiveTexture(GL_TEXTURE1);
-//            glBindTexture(GL_TEXTURE_2D, texture2);
+            //aktiviranje shadera za veliki kvadrat
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D, diffuseMap);
+            boardShader.use();
 
+            boardShader.setVec3("light.position", lightPos);
+            boardShader.setVec3("viewPos", cameraPos);
+
+            boardShader.setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
+            boardShader.setVec3("light.diffuse", 0.5, sin(glfwGetTime())/2.0+0.5, sin(glfwGetTime())/2.0+0.5);
+            boardShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
+
+            boardShader.setVec3("material.specular", 0.2f, 0.2f, 0.2f);
+            boardShader.setFloat("material.shininess", 32.0f);
+
+            // create transformations
+            glm::mat4 model = glm::mat4(1.0f);
+
+            glm::mat4 view = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
+            glm::mat4 projection = glm::mat4(1.0f);
+
+
+            //ovde se salje globalna promenljiva fov koja se menja na scroll preko callbacka
+            projection = glm::perspective(glm::radians(fov), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+            view = glm::lookAt(cameraPos, cameraPos+cameraFront, cameraUp);
+
+            model=glm::scale(model, glm::vec3(9.6f, 0.2f, 9.6f));
+            model=glm::rotate(model, glm::radians(90.0f), glm::vec3(-1.0f, 0.0f, 0.0f));
+            model = glm::translate(model, glm::vec3(0.058f, -0.34f, 2.2f));
+
+            // saljemo matrice shaderu
+            boardShader.setMat4("projection", projection);
+            boardShader.setMat4("view", view);
+            boardShader.setMat4("model", model);
+
+
+
+
+            glBindVertexArray(boardVAO);
+            glDrawArrays(GL_TRIANGLES, 0, 6);
+
+            //svetlo
+            lightShader.use();
+            lightShader.setVec3("color", 0.5, sin(glfwGetTime())/2.0+0.5, sin(glfwGetTime())/2.0+0.5);
+            lightShader.setMat4("projection", projection);
+            lightShader.setMat4("view", view);
+            model = glm::mat4(1.0f);
+            model = glm::translate(model, lightPos);
+            model = glm::scale(model, glm::vec3(2.0f));
+            lightShader.setMat4("model", model);
+
+            glBindVertexArray(lightVAO);
+            glDrawArrays(GL_TRIANGLES, 0, 36);
+
+
+            glActiveTexture(GL_TEXTURE1);
+            glBindTexture(GL_TEXTURE_2D, texture2);
             // activate shader
             ourShader.use();
 
             // pass projection matrix to shader (note that in this case it could change every frame)
-            glm::mat4 projection = glm::perspective(glm::radians(fov), (float) SCR_WIDTH / (float) SCR_HEIGHT, 0.1f,
-                                                    100.0f);
+            //glm::mat4 projection = glm::perspective(glm::radians(fov), (float) SCR_WIDTH / (float) SCR_HEIGHT, 0.1f,
+             //                                       100.0f);
             ourShader.setMat4("projection", projection);
 
             // camera/view transformation
-            glm::mat4 view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+            //glm::mat4 view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
             ourShader.setMat4("view", view);
 
 
 
             // render boxes
-            glBindVertexArray(VAO);
+            glBindVertexArray(fieldsVAO);
             for (unsigned int i = 0; i < 64; i++) {
                 // calculate the model matrix for each object and pass it to shader before drawing
                 glm::mat4 model = glm::mat4(0.5f); // make sure to initialize matrix to identity matrix first
@@ -372,10 +481,13 @@ glm::vec3 cubePositions[] = {
                 if (i % 2)
                     ourShader.setVec3("color", 0.0f, 0.0f, 0.0f);
                 else
-                    ourShader.setVec3("color", 1.0f, 1.0f, 1.0f);
+                    ourShader.setVec3("color", 0.0f, 0.0f, 0.0f);
 
-
+                glActiveTexture(GL_TEXTURE1);
+                glBindTexture(GL_TEXTURE_2D, texture2);
                 glDrawArrays(GL_TRIANGLES, 0, 36);
+
+
 
 
             }
@@ -387,7 +499,7 @@ glm::vec3 cubePositions[] = {
            // cout << cords[0] << " " << cords[1] << " " << cords[2] << endl;
 
             // world transformation
-            glm::mat4 model = glm::mat4(1.0f);
+            model = glm::mat4(1.0f);
             model = translate(model, glm::vec3(0.0f, -2.0f, -1.0f));
             model = scale(model, glm::vec3(8.0f, 2.0f, 6.0f));
 
@@ -397,7 +509,7 @@ glm::vec3 cubePositions[] = {
             figureShader.setMat4("view", view);
 
             model = glm::mat4(1.0f);
-            model = glm::translate(model,glm::vec3(mapa[field1][0], mapa[field1][1], mapa[field1][2])); // translate it down so it's at the center of the scene
+            model = glm::translate(model,glm::vec3(mapa[field1][0], mapa[field1][1]+0.2f, mapa[field1][2])); // translate it down so it's at the center of the scene
             model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
             model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
             model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
@@ -407,7 +519,8 @@ glm::vec3 cubePositions[] = {
             figurica.Draw(figureShader);
 
             model = glm::mat4(1.0f);
-            model = glm::translate(model,glm::vec3(mapa[field2][0], mapa[field2][1], mapa[field2][2])); // translate it down so it's at the center of the scene
+            //ovde dodaj 0.2f na y koordinatu
+            model = glm::translate(model,glm::vec3(mapa[field2][0], mapa[field2][1]+0.2f, mapa[field2][2])); // translate it down so it's at the center of the scene
             model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
             model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
             model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
@@ -423,8 +536,10 @@ glm::vec3 cubePositions[] = {
 
         // optional: de-allocate all resources once they've outlived their purpose:
         // ------------------------------------------------------------------------
-        glDeleteVertexArrays(1, &VAO);
-        glDeleteBuffers(1, &VBO);
+        glDeleteVertexArrays(1, &fieldsVAO);
+        glDeleteBuffers(1, &VBO1);
+        glDeleteVertexArrays(2, &boardVAO);
+        glDeleteBuffers(2, &VBO2);
 
 
         // glfw: terminate, clearing all previously allocated GLFW resources.
