@@ -101,7 +101,8 @@ map<string,Figure*> mapafigurica; // mapa koja cuva gde je kada koja figura
 float deltaTime = 0.0f;    // time between current frame and last frame
 float lastFrame = 0.0f;
 
-glm::vec3 lightPos(7.0f, 4.0f, 2.0f);
+glm::vec3 lightPos(0.5f, 6.0f, 3.0f);
+glm::vec3 lightDir(-0.2f, -1.0f, -0.3f);
 
 glm::vec3 cubePositions[] = {
             glm::vec3(0.0f, 0.0f, 0.0f),
@@ -319,16 +320,16 @@ glm::vec3 cubePositions[] = {
             return -1;
         }
 
-        glm::vec3 pointLightPositions[] = {
-                glm::vec3( 1.f,  0.f,  1.0f),
-                glm::vec3( 19.f,  -20.f, 1.0f),
-                glm::vec3( 19.f,  0.f, 1.0f),
-                glm::vec3( 1.f,  -20.0f, 1.0f),
-                glm::vec3(4.f,-8.f,1.f),
-                glm::vec3(4.f,-10.f,1.f),
-                glm::vec3(16.f,-8.f,1.f),
-                glm::vec3(16.f,-10.f,1.f),
-        };
+//        glm::vec3 pointLightPositions[] = {
+//                glm::vec3( 1.f,  0.f,  1.0f),
+//                glm::vec3( 19.f,  -20.f, 1.0f),
+//                glm::vec3( 19.f,  0.f, 1.0f),
+//                glm::vec3( 1.f,  -20.0f, 1.0f),
+//                glm::vec3(4.f,-8.f,1.f),
+//                glm::vec3(4.f,-10.f,1.f),
+//                glm::vec3(16.f,-8.f,1.f),
+//                glm::vec3(16.f,-10.f,1.f),
+//        };
 
 
         // configure global opengl state
@@ -360,8 +361,8 @@ glm::vec3 cubePositions[] = {
         rock.SetShaderTextureNamePrefix("material.");
 
         PointLight pointLight;
-        pointLight.ambient = glm::vec3(0.6, 0.6, 0.4);
-        pointLight.diffuse = glm::vec3(0.4, 0.4, 0.4);
+        pointLight.ambient = glm::vec3(1.5, 1.5, 1.5);
+        pointLight.diffuse = glm::vec3(0.5, 0.5, sin(glfwGetTime())/2.0+0.5);
         pointLight.specular = glm::vec3(1.0, 1.0, 1.0);
         pointLight.constant = 1.0f;
         pointLight.linear = 0.06f;
@@ -628,14 +629,14 @@ glm::vec3 cubePositions[] = {
             boardShader.use();
 
 
-            boardShader.setVec3("light.position", lightPos);
+            boardShader.setVec3("light.direction", lightDir);
             boardShader.setVec3("viewPos", camera.Position);
 
             boardShader.setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
-            boardShader.setVec3("light.diffuse", 0.5, sin(glfwGetTime())/2.0+0.5, sin(glfwGetTime())/2.0+0.5);
+            boardShader.setVec3("light.diffuse", 0.5, 0.5, sin(glfwGetTime())/2.0+0.5);
             boardShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
 
-            boardShader.setVec3("material.specular", 0.2f, 0.2f, 0.2f);
+            boardShader.setVec3("material.specular", 0.5f, 0.5f, 0.5f);
             boardShader.setFloat("material.shininess", 32.0f);
 
             // create transformations
@@ -666,7 +667,7 @@ glm::vec3 cubePositions[] = {
 
             //svetlo
             lightShader.use();
-            lightShader.setVec3("color", 0.5, sin(glfwGetTime())/2.0+0.5, sin(glfwGetTime())/2.0+0.5);
+            lightShader.setVec3("color", sin(glfwGetTime())/2.0+0.5, 0.5, sin(glfwGetTime())/2.0+0.5);
             lightShader.setMat4("projection", projection);
             lightShader.setMat4("view", view);
             model = glm::mat4(1.0f);
