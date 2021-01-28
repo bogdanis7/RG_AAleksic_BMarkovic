@@ -40,8 +40,9 @@ void main()
     //spekularna
     float specStrength=0.5;
     vec3 viewDirection=normalize(viewPos-FragPos);
+    vec3 halfwayDir=normalize(lightDir+viewDirection);
     vec3 reflectDirection=reflect(-lightDir, norm);
-    float spec=pow(max(dot(viewDirection, reflectDirection), 0.0), material.shininess);
+    float spec=pow(max(dot(norm, halfwayDir), 0.0), material.shininess);
     vec3 specular=light.specular*(spec*material.specular);
 
     //rezultat

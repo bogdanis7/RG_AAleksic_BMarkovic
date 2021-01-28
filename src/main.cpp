@@ -217,7 +217,7 @@ glm::vec3 cubePositions[] = {
 
         f = new Figure("B1");
         f2 = new Figure("G1");
-        f3 = new Figure("A1");
+        f3 = new Figure("H1");
         f4 = new Figure("C1");
         f5 = new Figure("A1");
         f6 = new Figure("D1");
@@ -252,20 +252,20 @@ glm::vec3 cubePositions[] = {
 
         mapafigurica["B1"] = f;
         mapafigurica["G1"] = f2;
-        mapafigurica["A1"] = f3;
+        mapafigurica["H1"] = f3;
         mapafigurica["C1"] = f4;
         mapafigurica["A1"] = f5;
         mapafigurica["D1"] = f6;
         mapafigurica["E1"] = f7;
         mapafigurica["F1"]=f8;
         mapafigurica["A2"] = f9;
-        mapafigurica["B5"] = f10;
-        mapafigurica["C5"] = f11;
-        mapafigurica["D5"] = f12;
-        mapafigurica["E5"] = f13;
-        mapafigurica["F5"] = f14;
-        mapafigurica["G5"] = f15;
-        mapafigurica["H5"]=f16;
+        mapafigurica["B2"] = f10;
+        mapafigurica["C2"] = f11;
+        mapafigurica["D2"] = f12;
+        mapafigurica["E2"] = f13;
+        mapafigurica["F2"] = f14;
+        mapafigurica["G2"] = f15;
+        mapafigurica["H2"]=f16;
         mapafigurica["E8"] = f17;
         mapafigurica["D8"] = f18;
         mapafigurica["A7"] = f19;
@@ -335,6 +335,9 @@ glm::vec3 cubePositions[] = {
         // configure global opengl state
         // -----------------------------
         glEnable(GL_DEPTH_TEST);
+        //dozvolimo odsecanje stranica
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_BACK);
         // stbi_set_flip_vertically_on_load(true);
         // build and compile our shader zprogram
         //tekstura i svetlo
@@ -362,7 +365,7 @@ glm::vec3 cubePositions[] = {
 
         PointLight pointLight;
         pointLight.ambient = glm::vec3(1.5, 1.5, 1.5);
-        pointLight.diffuse = glm::vec3(0.5, 0.5, sin(glfwGetTime())/2.0+0.5);
+        pointLight.diffuse = glm::vec3(0.7, 0.7, sin(glfwGetTime())/2.0+0.5);
         pointLight.specular = glm::vec3(1.0, 1.0, 1.0);
         pointLight.constant = 1.0f;
         pointLight.linear = 0.06f;
@@ -372,11 +375,11 @@ glm::vec3 cubePositions[] = {
         // ------------------------------------------------------------------
         float vertices[] = {
                 -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
+                0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
                 0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
                 0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
-                0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
-                -0.5f, 0.5f, -0.5f, 0.0f, 1.0f,
                 -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
+                -0.5f, 0.5f, -0.5f, 0.0f, 1.0f,
 
                 -0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
                 0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
@@ -393,11 +396,12 @@ glm::vec3 cubePositions[] = {
                 -0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
 
                 0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+                0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
                 0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
                 0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-                0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-                0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
                 0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+                0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+
 
                 -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
                 0.5f, -0.5f, -0.5f, 1.0f, 1.0f,
@@ -407,11 +411,12 @@ glm::vec3 cubePositions[] = {
                 -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
 
                 -0.5f, 0.5f, -0.5f, 0.0f, 1.0f, //A
-                0.5f, 0.5f, -0.5f, 1.0f, 1.0f,//B
                 0.5f, 0.5f, 0.5f, 1.0f, 0.0f,//C
-                0.5f, 0.5f, 0.5f, 1.0f, 0.0f, // D
+                0.5f, 0.5f, -0.5f, 1.0f, 1.0f,//B
                 -0.5f, 0.5f, 0.5f, 0.0f, 0.0f,//F
+                0.5f, 0.5f, 0.5f, 1.0f, 0.0f, // D
                 -0.5f, 0.5f, -0.5f, 0.0f, 1.0f//E
+
         };
         // world space positions of our cubes
 
@@ -525,15 +530,25 @@ glm::vec3 cubePositions[] = {
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 
 
+//        vector<std::string> faces
+//                {
+//                        FileSystem::getPath("resources/textures/UnionSquare/right.jpg"),
+//                        FileSystem::getPath("resources/textures/UnionSquare/left.jpg"),
+//                        FileSystem::getPath("resources/textures/UnionSquare/top.jpg"),
+//                        FileSystem::getPath("resources/textures/UnionSquare/bottom.jpg"),
+//                        FileSystem::getPath("resources/textures/UnionSquare/posz.jpg"),
+//                        FileSystem::getPath("resources/textures/UnionSquare/back.jpg")
+//                };
         vector<std::string> faces
                 {
-                        FileSystem::getPath("resources/textures/UnionSquare/right.jpg"),
-                        FileSystem::getPath("resources/textures/UnionSquare/left.jpg"),
-                        FileSystem::getPath("resources/textures/UnionSquare/top.jpg"),
-                        FileSystem::getPath("resources/textures/UnionSquare/bottom.jpg"),
-                        FileSystem::getPath("resources/textures/UnionSquare/posz.jpg"),
-                        FileSystem::getPath("resources/textures/UnionSquare/back.jpg")
+                        FileSystem::getPath("resources/textures/PiazzaDelPopolo1/posx.jpg"),
+                        FileSystem::getPath("resources/textures/PiazzaDelPopolo1/negx.jpg"),
+                        FileSystem::getPath("resources/textures/PiazzaDelPopolo1/posy.jpg"),
+                        FileSystem::getPath("resources/textures/PiazzaDelPopolo1/negy.jpg"),
+                        FileSystem::getPath("resources/textures/PiazzaDelPopolo1/posz.jpg"),
+                        FileSystem::getPath("resources/textures/PiazzaDelPopolo1/negz.jpg")
                 };
+
         unsigned int cubemapTexture =  loadCubemap(faces);
 
 
@@ -633,7 +648,7 @@ glm::vec3 cubePositions[] = {
             boardShader.setVec3("viewPos", camera.Position);
 
             boardShader.setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
-            boardShader.setVec3("light.diffuse", 0.5, 0.5, sin(glfwGetTime())/2.0+0.5);
+            boardShader.setVec3("light.diffuse", 0.7, 0.7, sin(glfwGetTime())/2.0+0.5);
             boardShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
 
             boardShader.setVec3("material.specular", 0.5f, 0.5f, 0.5f);
@@ -667,7 +682,7 @@ glm::vec3 cubePositions[] = {
 
             //svetlo
             lightShader.use();
-            lightShader.setVec3("color", sin(glfwGetTime())/2.0+0.5, 0.5, sin(glfwGetTime())/2.0+0.5);
+            lightShader.setVec3("color", 0.7, 0.7, sin(glfwGetTime())/2.0+0.5);
             lightShader.setMat4("projection", projection);
             lightShader.setMat4("view", view);
             model = glm::mat4(1.0f);
