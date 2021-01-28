@@ -1,7 +1,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <stb_image.h>
-
+#include<rg/ourCamera.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -22,19 +22,67 @@ void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void key_callback(GLFWwindow *window, int key, int scancode, int action, int mod);
 void scroll_callback(GLFWwindow *window, double xoffset, double yoffset);
 void processInput(GLFWwindow *window);
-
 // settings
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
+//inicijalizacija
+
+vector<Figure*> vektor_figurica;
+
 static Figure *f;
 static Figure *f2;
-//vector<Field> fields;
+static Figure *f3;
+static Figure *f4;
+static Figure *f5;
+static Figure *f6;
+static Figure *f7;
+static Figure *f8;
+static Figure *f9;
+static Figure *f10;
+static Figure *f11;
+static Figure *f12;
+static Figure *f13;
+static Figure *f14;
+static Figure *f15;
+static Figure *f16;
+static Figure *f17;
+static Figure *f18;
+static Figure *f19;
+static Figure *f20;
+static Figure *f21;
+static Figure *f22;
+static Figure *f23;
+static Figure *f24;
+static Figure *f25;
+static Figure *f26;
+static Figure *f27;
+static Figure *f28;
+static Figure *f29;
+static Figure *f30;
+static Figure *f31;
+static Figure *f32;
 
+
+struct PointLight {
+    glm::vec3 position;
+
+    glm::vec3 ambient;
+    glm::vec3 diffuse;
+    glm::vec3 specular;
+
+    float constant;
+    float linear;
+    float quadratic;
+};
+
+
+vector<int> translate_ind;
 // camera
 glm::vec3 cameraPos = glm::vec3(0.0f, 5.0f, 10.0f);
 glm::vec3 cameraFront = glm::vec3(0.0f, 1.0f, -3.0f);
 glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+
 
 
 bool firstMouse = true;
@@ -44,8 +92,8 @@ float lastX = 800.0f / 2.0;
 float lastY = 600.0 / 2.0;
 float fov = 45.0f;
 
-map<string,vector<float>> mapa;
-map<string,Figure*> mapafigurica;
+map<string,vector<float>> mapa; // mapa koja pravi A1 - 7 0 9
+map<string,Figure*> mapafigurica; // mapa koja cuva gde je kada koja figura
 
 // timing
 float deltaTime = 0.0f;    // time between current frame and last frame
@@ -135,36 +183,108 @@ glm::vec3 cubePositions[] = {
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
+        //MORA DA SE PRAVI ZA SVAKU FIGURU POSEBNO OVA MAPA JER SVE IMAJU RAZLICIT
+        //koord pocetak -- ovo je za konja igraca A
         vector<char> s = {'A','B','C','D','E','F','G','H'};
         string pom = "";
-        f = new Figure("G6");
-        f2 = new Figure("H2");
-        mapafigurica["G6"] = f;
-        mapafigurica["H2"] = f2;
         vector<float> vec(3);
-        float x = -0.1f;
-        float y = 0.3f;
-        float z = 0.3f;
-        int j = 2.3f;
-        for(char c : s){
+        vector<string> niska;
+
+        float x;
+        float y = 0.5f;
+        float z;
+        int j = 9.0f;
+        for(char c : s){  // A1 7 0.5 9
             z = j;
-            j++;
+            j--;
             x = 0;
-            for(float i = -0.1 ; i < 7.0f; i++){
-                x = i;
+            for(float i = 1 ; i <= 7; i++){
+                x = 8-i ;
+
                 vec = {x,y,z};
                 pom += c;
                 char p = i + '0';
                 pom+=p;
                 mapa[pom]=vec;
-
+                niska.push_back(pom);
                 pom = "";
             }
         }
 
-           cout << mapa["A1"][0] << mapa["A1"][1] << mapa["A1"][2] << endl;
-           cout << mapa["G6"][0] << mapa["G6"][1] << mapa["G6"][2] << endl;
+
+        f = new Figure("B1");
+        f2 = new Figure("G1");
+        f3 = new Figure("A1");
+        f4 = new Figure("C1");
+        f5 = new Figure("A1");
+        f6 = new Figure("D1");
+        f7 = new Figure("E1");
+        f8 = new Figure("F1");
+        f9 = new Figure("A2");
+        f10 = new Figure("B2");
+        f11 = new Figure("C2");
+        f12 = new Figure("D2");
+        f13 = new Figure("E2");
+        f14 = new Figure("F2");
+        f15 = new Figure("G2");
+        f16 = new Figure("H2");
+        f17 = new Figure("B1");
+        f18= new Figure("G1");
+        f19= new Figure("A1");
+        f20= new Figure("C1");
+        f21= new Figure("A1");
+        f22= new Figure("D1");
+        f23= new Figure("E1");
+        f24= new Figure("F1");
+        f25= new Figure("A2");
+        f26 = new Figure("B2");
+        f27 = new Figure("C2");
+        f28 = new Figure("D2");
+        f29 = new Figure("E2");
+        f30 = new Figure("F2");
+        f31 = new Figure("G2");
+        f32 = new Figure("H2");
+
+
+
+        mapafigurica["B1"] = f;
+        mapafigurica["G1"] = f2;
+        mapafigurica["A1"] = f3;
+        mapafigurica["C1"] = f4;
+        mapafigurica["A1"] = f5;
+        mapafigurica["D1"] = f6;
+        mapafigurica["E1"] = f7;
+        mapafigurica["F1"]=f8;
+        mapafigurica["A2"] = f9;
+        mapafigurica["B5"] = f10;
+        mapafigurica["C5"] = f11;
+        mapafigurica["D5"] = f12;
+        mapafigurica["E5"] = f13;
+        mapafigurica["F5"] = f14;
+        mapafigurica["G5"] = f15;
+        mapafigurica["H5"]=f16;
+        mapafigurica["B6"] = f17;
+        mapafigurica["G6"] = f18;
+        mapafigurica["A6"] = f19;
+        mapafigurica["C6"] = f20;
+        mapafigurica["A6"] = f21;
+        mapafigurica["D6"] = f22;
+        mapafigurica["E6"] = f23;
+        mapafigurica["F6"]= f24;
+        mapafigurica["A5"] = f25;
+        mapafigurica["B5"] = f26;
+        mapafigurica["C5"] = f27;
+        mapafigurica["D5"] = f28;
+        mapafigurica["E5"] = f29;
+        mapafigurica["F5"] = f30;
+        mapafigurica["G5"] = f31;
+        mapafigurica["H5"]=f32;
+
+
+
+
+
+
 
 
 #ifdef __APPLE__
@@ -197,19 +317,54 @@ glm::vec3 cubePositions[] = {
             return -1;
         }
 
+        glm::vec3 pointLightPositions[] = {
+                glm::vec3( 1.f,  0.f,  1.0f),
+                glm::vec3( 19.f,  -20.f, 1.0f),
+                glm::vec3( 19.f,  0.f, 1.0f),
+                glm::vec3( 1.f,  -20.0f, 1.0f),
+                glm::vec3(4.f,-8.f,1.f),
+                glm::vec3(4.f,-10.f,1.f),
+                glm::vec3(16.f,-8.f,1.f),
+                glm::vec3(16.f,-10.f,1.f),
+        };
+
+
         // configure global opengl state
         // -----------------------------
         glEnable(GL_DEPTH_TEST);
         // stbi_set_flip_vertically_on_load(true);
         // build and compile our shader zprogram
         //tekstura i svetlo
+
         Shader boardShader("resources/shaders/board.vs", "resources/shaders/board.fs");
         Shader lightShader("resources/shaders/light.vs", "resources/shaders/light.fs");
-
+        Shader modelShader("resources/shaders/model.vs", "resources/shaders/model.fs");
         // ------------------------------------
-        Shader figureShader("resources/shaders/1.model_loading.vs", "resources/shaders/1.model_loading.fs");
         Shader ourShader("resources/shaders/field.vs", "resources/shaders/field.fs");
-        Model figurica(FileSystem::getPath("resources/objects/WoodenChess/12930_WoodenChessKnightSideA_v1_l3.obj"));
+        Model konjA(FileSystem::getPath("resources/objects/WoodenChess/12930_WoodenChessKnightSideA_v1_l3.obj"));
+        Model lovacA(FileSystem::getPath("resources/objects/WoodenChessBishopSideA/WoodenChessBishop.obj"));
+        Model piunA(FileSystem::getPath("resources/objects/WoodenChessPawnSideA/12931_WoodenChessPawnSideA_v1_l3.obj"));
+        Model kraljicaA(FileSystem::getPath("resources/objects/WoodenChessQueenSideA_v1_L3.1/12927_Wooden_Chess_Queen_side_A_v1_l3.obj"));
+        Model kraljA(FileSystem::getPath("resources/objects/WoodenChessKingSideA/12926_Wooden_Chess_King_Side_A_v1_l3.obj"));
+        Model topB(FileSystem::getPath("resources/objects/topb/12934_Wooden_Chess_Rook_Side_B_V2_L3.obj"));
+        Model topA(FileSystem::getPath("resources/objects/WoodenChessRookSideA/Wooden_Chess_Rook_.obj"));
+        Model konjB(FileSystem::getPath("resources/objects/konjbb/12936_Wooden_Chess_Knight_Side_B_V2_l3.obj"));
+        Model lovacB(FileSystem::getPath("resources/objects/lovacb/12395_Wooden_Chess_Bishop_Side_B_V2_l3.obj"));
+        Model kraljicaB(FileSystem::getPath("resources/objects/kraljicab/12933_Wooden_Chess_Queen_side_b_v1_l3.obj"));
+        Model kraljB(FileSystem::getPath("resources/objects/kraljb/12932_Wooden_Chess_King_Side_B_V2_l3.obj"));
+        Model piunB(FileSystem::getPath("resources/objects/piunb/12937_Wooden_Chess_Pawn_Side_B_V2_L3.obj"));
+        Model rock(FileSystem::getPath("resources/objects/rock/rock.obj"));
+
+        rock.SetShaderTextureNamePrefix("material.");
+
+        PointLight pointLight;
+        pointLight.ambient = glm::vec3(0.6, 0.6, 0.4);
+        pointLight.diffuse = glm::vec3(0.4, 0.4, 0.4);
+        pointLight.specular = glm::vec3(1.0, 1.0, 1.0);
+        pointLight.constant = 1.0f;
+        pointLight.linear = 0.06f;
+        pointLight.quadratic = 0.012f;
+        pointLight.position = lightPos;
         // set up vertex data (and buffer(s)) and configure vertex attributes
         // ------------------------------------------------------------------
         float vertices[] = {
@@ -351,6 +506,7 @@ glm::vec3 cubePositions[] = {
         boardShader.use();
         boardShader.setInt("diffuse", 0);
 
+
         //tekstura za podlogu
         unsigned int texture2;
         glGenTextures(1, &texture2);
@@ -381,6 +537,7 @@ glm::vec3 cubePositions[] = {
 
 
 
+
         // render loop
         // -----------
         while (!glfwWindowShouldClose(window)) {
@@ -403,6 +560,7 @@ glm::vec3 cubePositions[] = {
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, diffuseMap);
             boardShader.use();
+
 
             boardShader.setVec3("light.position", lightPos);
             boardShader.setVec3("viewPos", cameraPos);
@@ -468,6 +626,39 @@ glm::vec3 cubePositions[] = {
             //glm::mat4 view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
             ourShader.setMat4("view", view);
 
+            string field1 = f->getField();
+            string field2 = f2->getField();
+            string field3 = f3->getField();
+            string field4 = f4->getField();
+            string field5 = f5->getField();
+            string field6 = f6->getField();
+            string field7 = f7->getField();
+            string field8 = f8->getField();
+            string field9 = f9->getField();
+            string field10 = f10->getField();
+            string field11 = f11->getField();
+            string field12= f12->getField();
+            string field13= f13->getField();
+            string field14= f14->getField();
+            string field15= f15->getField();
+            string field16= f16->getField();
+            string field17 = f->getField();
+            string field18= f2->getField();
+            string field19= f3->getField();
+            string field20= f4->getField();
+            string field21= f5->getField();
+            string field22= f6->getField();
+            string field23= f7->getField();
+            string field24= f8->getField();
+            string field25= f9->getField();
+            string field26 = f10->getField();
+            string field27 = f11->getField();
+            string field28= f12->getField();
+            string field29= f13->getField();
+            string field30= f14->getField();
+            string field31= f15->getField();
+            string field32= f16->getField();
+
 
 
             // render boxes
@@ -493,40 +684,311 @@ glm::vec3 cubePositions[] = {
             }
 
             //for figure in figures OVDE CE DA IDE
-            string field1 = f->getField();
-            string field2 = f2->getField();
-
-           // cout << cords[0] << " " << cords[1] << " " << cords[2] << endl;
 
             // world transformation
             model = glm::mat4(1.0f);
             model = translate(model, glm::vec3(0.0f, -2.0f, -1.0f));
             model = scale(model, glm::vec3(8.0f, 2.0f, 6.0f));
 
-            figureShader.use();
+            modelShader.use();
+            modelShader.setVec3("pointLight.position",pointLight.position);
+            modelShader.setVec3("pointLight.ambient",pointLight.ambient);
+            modelShader.setVec3("pointLight.diffuse",pointLight.diffuse);
+            modelShader.setVec3("pointLight.specular",pointLight.specular);
+            modelShader.setFloat("pointLight.constant",pointLight.constant);
+            modelShader.setFloat("pointLight.linear",pointLight.linear);
+            modelShader.setFloat("pointLight.quadratic",pointLight.quadratic);
 
-            figureShader.setMat4("projection", projection);
-            figureShader.setMat4("view", view);
+            modelShader.setVec3("viewPosition", cameraPos);
+            modelShader.setFloat("material.shininess", 64.0f);
+            modelShader.setMat4("projection", projection);
+            modelShader.setMat4("view", view);
+
+
 
             model = glm::mat4(1.0f);
-            model = glm::translate(model,glm::vec3(mapa[field1][0], mapa[field1][1]+0.2f, mapa[field1][2])); // translate it down so it's at the center of the scene
+            model = glm::translate(model,glm::vec3(mapa[field1][0], mapa[field1][1], mapa[field1][2])); // translate it down so it's at the center of the scene
             model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
             model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
             model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
             model = glm::scale(model, glm::vec3(0.18f));    // it's a bit too big for our scene, so scale it down
-            figureShader.setMat4("model", model);
-            // std::cout <<
-            figurica.Draw(figureShader);
+            modelShader.setMat4("model", model);
+            konjA.Draw(modelShader);
+
+
 
             model = glm::mat4(1.0f);
-            //ovde dodaj 0.2f na y koordinatu
-            model = glm::translate(model,glm::vec3(mapa[field2][0], mapa[field2][1]+0.2f, mapa[field2][2])); // translate it down so it's at the center of the scene
+            model = glm::translate(model,glm::vec3(mapa[field2][0], mapa[field2][1], mapa[field2][2])); // translate it down so it's at the center of the scene
             model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
             model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
             model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
             model = glm::scale(model, glm::vec3(0.18f));    // it's a bit too big for our scene, so scale it down
-            figureShader.setMat4("model", model);
-            figurica.Draw(figureShader);
+            modelShader.setMat4("model", model);
+            konjA.Draw(modelShader);
+
+
+
+
+//
+            model = glm::mat4(1.0f);
+            model = glm::translate(model,glm::vec3(mapa[field4][0]-0.02f, mapa[field4][1], mapa[field4][2]-0.9f)); // translate it down so it's at the center of the scene
+            model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
+            model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
+            model = glm::scale(model, glm::vec3(0.18f));    // it's a bit too big for our scene, so scale it down
+            modelShader.setMat4("model", model);
+            lovacA.Draw(modelShader);
+
+            model = glm::mat4(1.0f);
+            model = glm::translate(model,glm::vec3(mapa[field8][0]-0.02f, mapa[field8][1], mapa[field8][2]-0.9f)); // translate it down so it's at the center of the scene
+            model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
+            model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
+            model = glm::scale(model, glm::vec3(0.18f));    // it's a bit too big for our scene, so scale it down
+            modelShader.setMat4("model", model);
+            lovacA.Draw(modelShader);
+
+            model = glm::mat4(1.0f);
+            model = glm::translate(model,glm::vec3(mapa[field16][0]-0.9, mapa[field16][1], mapa[field16][2]+0.9f)); // translate it down so it's at the center of the scene
+            model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
+            model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
+            model = glm::scale(model, glm::vec3(0.18f));    // it's a bit too big for our scene, so scale it down
+            modelShader.setMat4("model", model);
+            piunA.Draw(modelShader);
+
+            model = glm::mat4(1.0f);
+            model = glm::translate(model,glm::vec3(mapa[field9][0]-0.9, mapa[field9][1], mapa[field9][2]+0.9f)); // translate it down so it's at the center of the scene
+            model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
+            model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
+            model = glm::scale(model, glm::vec3(0.18f));    // it's a bit too big for our scene, so scale it down
+            modelShader.setMat4("model", model);
+            piunA.Draw(modelShader);
+
+            model = glm::mat4(1.0f);
+            model = glm::translate(model,glm::vec3(mapa[field10][0]-0.9, mapa[field10][1], mapa[field10][2]+0.9f)); // translate it down so it's at the center of the scene
+            model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
+            model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
+            model = glm::scale(model, glm::vec3(0.18f));    // it's a bit too big for our scene, so scale it down
+            modelShader.setMat4("model", model);
+            piunA.Draw(modelShader);
+
+            model = glm::mat4(1.0f);
+            model = glm::translate(model,glm::vec3(mapa[field11][0]-0.9, mapa[field11][1], mapa[field11][2]+0.9f)); // translate it down so it's at the center of the scene
+            model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
+            model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
+            model = glm::scale(model, glm::vec3(0.18f));    // it's a bit too big for our scene, so scale it down
+            modelShader.setMat4("model", model);
+            piunA.Draw(modelShader);
+
+            model = glm::mat4(1.0f);
+            model = glm::translate(model,glm::vec3(mapa[field12][0]-0.9, mapa[field12][1], mapa[field12][2]+0.9f)); // translate it down so it's at the center of the scene
+            model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
+            model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
+            model = glm::scale(model, glm::vec3(0.18f));    // it's a bit too big for our scene, so scale it down
+            modelShader.setMat4("model", model);
+            piunA.Draw(modelShader);
+
+            model = glm::mat4(1.0f);
+            model = glm::translate(model,glm::vec3(mapa[field13][0]-0.9, mapa[field13][1], mapa[field13][2]+0.9f)); // translate it down so it's at the center of the scene
+            model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
+            model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
+            model = glm::scale(model, glm::vec3(0.18f));    // it's a bit too big for our scene, so scale it down
+            modelShader.setMat4("model", model);
+            piunA.Draw(modelShader);
+
+            model = glm::mat4(1.0f);
+            model = glm::translate(model,glm::vec3(mapa[field14][0]-0.9, mapa[field14][1], mapa[field14][2]+0.9f)); // translate it down so it's at the center of the scene
+            model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
+            model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
+            model = glm::scale(model, glm::vec3(0.18f));    // it's a bit too big for our scene, so scale it down
+            modelShader.setMat4("model", model);
+            piunA.Draw(modelShader);
+
+            model = glm::mat4(1.0f);
+            model = glm::translate(model,glm::vec3(mapa[field15][0]-0.9, mapa[field15][1], mapa[field15][2]+0.9f)); // translate it down so it's at the center of the scene
+            model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
+            model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
+            model = glm::scale(model, glm::vec3(0.18f));    // it's a bit too big for our scene, so scale it down
+            modelShader.setMat4("model", model);
+            piunA.Draw(modelShader);
+
+
+            model = glm::mat4(1.0f);
+            model = glm::translate(model,glm::vec3(mapa[field6][0], mapa[field6][1], mapa[field6][2]-1.7f)); // translate it down so it's at the center of the scene
+            model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
+            model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
+            model = glm::scale(model, glm::vec3(0.18f));    // it's a bit too big for our scene, so scale it down
+            modelShader.setMat4("model", model);
+            kraljicaA.Draw(modelShader);
+
+            model = glm::mat4(1.0f);
+            model = glm::translate(model,glm::vec3(mapa[field7][0], mapa[field7][1], mapa[field7][2]-2.5f)); // translate it down so it's at the center of the scene
+            model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
+            model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
+            model = glm::scale(model, glm::vec3(0.18f));    // it's a bit too big for our scene, so scale it down
+            modelShader.setMat4("model", model);
+            kraljA.Draw(modelShader);
+
+            model = glm::mat4(1.0f);
+            model = glm::translate(model,glm::vec3(mapa[field17][0]-12.85f, mapa[field17][1], mapa[field17][2]-2.5f)); // translate it down so it's at the center of the scene
+            model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
+            model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
+            model = glm::scale(model, glm::vec3(0.18f));    // it's a bit too big for our scene, so scale it down
+            modelShader.setMat4("model", model);
+            kraljB.Draw(modelShader);
+
+            model = glm::mat4(1.0f);
+            model = glm::translate(model,glm::vec3(mapa[field18][0]-12.85f, mapa[field18][1], mapa[field18][2]-2.5f)); // translate it down so it's at the center of the scene
+            model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
+            model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
+            model = glm::scale(model, glm::vec3(0.18f));    // it's a bit too big for our scene, so scale it down
+            modelShader.setMat4("model", model);
+            kraljicaB.Draw(modelShader);
+
+            model = glm::mat4(1.0f);
+            model = glm::translate(model,glm::vec3(mapa[field20][0]-12.85f, mapa[field20][1], mapa[field20][2]-2.5f)); // translate it down so it's at the center of the scene
+            model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
+            model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
+            model = glm::scale(model, glm::vec3(0.18f));    // it's a bit too big for our scene, so scale it down
+            modelShader.setMat4("model", model);
+            konjB.Draw(modelShader);
+
+            model = glm::mat4(1.0f);
+            model = glm::translate(model,glm::vec3(mapa[field21][0]-12.85f, mapa[field21][1], mapa[field21][2]-2.5f)); // translate it down so it's at the center of the scene
+            model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
+            model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
+            model = glm::scale(model, glm::vec3(0.18f));    // it's a bit too big for our scene, so scale it down
+            modelShader.setMat4("model", model);
+            konjB.Draw(modelShader);
+
+            model = glm::mat4(1.0f);
+            model = glm::translate(model,glm::vec3(mapa[field22][0]-12.85f, mapa[field22][1], mapa[field22][2]-2.5f)); // translate it down so it's at the center of the scene
+            model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
+            model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
+            model = glm::scale(model, glm::vec3(0.18f));    // it's a bit too big for our scene, so scale it down
+            modelShader.setMat4("model", model);
+            lovacB.Draw(modelShader);
+
+            model = glm::mat4(1.0f);
+            model = glm::translate(model,glm::vec3(mapa[field23][0]-12.85f, mapa[field23][1], mapa[field23][2]-2.5f)); // translate it down so it's at the center of the scene
+            model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
+            model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
+            model = glm::scale(model, glm::vec3(0.18f));    // it's a bit too big for our scene, so scale it down
+            modelShader.setMat4("model", model);
+            lovacB.Draw(modelShader);
+
+
+            model = glm::mat4(1.0f);
+            model = glm::translate(model,glm::vec3(mapa[field25][0]-12.85f, mapa[field25][1], mapa[field25][2]-2.5f)); // translate it down so it's at the center of the scene
+            model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
+            model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
+            model = glm::scale(model, glm::vec3(0.18f));    // it's a bit too big for our scene, so scale it down
+            modelShader.setMat4("model", model);
+            topB.Draw(modelShader);
+
+            model = glm::mat4(1.0f);
+            model = glm::translate(model,glm::vec3(mapa[field26][0]-12.85f, mapa[field26][1], mapa[field26][2]-2.5f)); // translate it down so it's at the center of the scene
+            model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
+            model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
+            model = glm::scale(model, glm::vec3(0.18f));    // it's a bit too big for our scene, so scale it down
+            modelShader.setMat4("model", model);
+            topB.Draw(modelShader);
+
+
+
+            model = glm::mat4(1.0f);
+            model = glm::translate(model,glm::vec3(mapa[field27][0]-0.9f-10.85f, mapa[field27][1], mapa[field27][2]+1.9f)); // translate it down so it's at the center of the scene
+            model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
+            model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
+            model = glm::scale(model, glm::vec3(0.18f));    // it's a bit too big for our scene, so scale it down
+            modelShader.setMat4("model", model);
+            piunB.Draw(modelShader);
+
+            model = glm::mat4(1.0f);
+            model = glm::translate(model,glm::vec3(mapa[field28][0]-0.9f-10.85f, mapa[field28][1], mapa[field28][2]+1.9f)); // translate it down so it's at the center of the scene
+            model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
+            model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
+            model = glm::scale(model, glm::vec3(0.18f));    // it's a bit too big for our scene, so scale it down
+            modelShader.setMat4("model", model);
+            piunB.Draw(modelShader);
+
+            model = glm::mat4(1.0f);
+            model = glm::translate(model,glm::vec3(mapa[field29][0]-0.9f-10.85f, mapa[field29][1], mapa[field29][2]+1.9f)); // translate it down so it's at the center of the scene
+            model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
+            model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
+            model = glm::scale(model, glm::vec3(0.18f));    // it's a bit too big for our scene, so scale it down
+            modelShader.setMat4("model", model);
+            piunB.Draw(modelShader);
+
+            model = glm::mat4(1.0f);
+            model = glm::translate(model,glm::vec3(mapa[field30][0]-0.9f-10.85f, mapa[field30][1], mapa[field30][2]+1.9f)); // translate it down so it's at the center of the scene
+            model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
+            model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
+            model = glm::scale(model, glm::vec3(0.18f));    // it's a bit too big for our scene, so scale it down
+            modelShader.setMat4("model", model);
+            piunB.Draw(modelShader);
+
+            model = glm::mat4(1.0f);
+            model = glm::translate(model,glm::vec3(mapa[field31][0]-0.9f-10.85f, mapa[field31][1], mapa[field31][2]+1.9f)); // translate it down so it's at the center of the scene
+            model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
+            model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
+            model = glm::scale(model, glm::vec3(0.18f));    // it's a bit too big for our scene, so scale it down
+            modelShader.setMat4("model", model);
+            piunB.Draw(modelShader);
+
+            model = glm::mat4(1.0f);
+            model = glm::translate(model,glm::vec3(mapa[field32][0]-0.9f-10.85f, mapa[field32][1], mapa[field32][2]+1.9f)); // translate it down so it's at the center of the scene
+            model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
+            model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
+            model = glm::scale(model, glm::vec3(0.18f));    // it's a bit too big for our scene, so scale it down
+            modelShader.setMat4("model", model);
+            piunB.Draw(modelShader);
+
+            model = glm::mat4(1.0f);
+            model = glm::translate(model,glm::vec3(mapa[field24][0]-0.9f-10.85f, mapa[field24][1], mapa[field24][2]+1.9f)); // translate it down so it's at the center of the scene
+            model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
+            model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
+            model = glm::scale(model, glm::vec3(0.18f));    // it's a bit too big for our scene, so scale it down
+            modelShader.setMat4("model", model);
+            piunB.Draw(modelShader);
+
+            model = glm::mat4(1.0f);
+            model = glm::translate(model,glm::vec3(mapa[field19][0]-0.9f-10.85f, mapa[field19][1], mapa[field19][2]+1.9f)); // translate it down so it's at the center of the scene
+            model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
+            model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
+            model = glm::scale(model, glm::vec3(0.18f));    // it's a bit too big for our scene, so scale it down
+            modelShader.setMat4("model", model);
+            piunB.Draw(modelShader);
+
+
+
+
 
             // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
             // -------------------------------------------------------------------------------
@@ -638,154 +1100,184 @@ glm::vec3 cubePositions[] = {
     std::string dest;
     bool ind = true;
 
-    void key_callback1(GLFWwindow* window, int key, int scancode, int action, int mods) {
+void key_callback1(GLFWwindow* window, int key, int scancode, int action, int mods) {
 
-        if (ind == true) { //ako je true, treba nam src
-            if (key == GLFW_KEY_A and action == GLFW_PRESS) {
-                src = "A";
-            }
-            if (key == GLFW_KEY_B and action == GLFW_PRESS) {
-                src = "B";
-            }
-            if (key == GLFW_KEY_C and action == GLFW_PRESS) {
-                src = "C";
-            }
-            if (key == GLFW_KEY_D and action == GLFW_PRESS) {
-                src = "D";
-            }
-            if (key == GLFW_KEY_E and action == GLFW_PRESS) {
-                src = "E";
-            }
-            if (key == GLFW_KEY_F and action == GLFW_PRESS) {
-                src = "F";
-
-            }
-            if (key == GLFW_KEY_G and action == GLFW_PRESS) {
-                src = "G";
-            }
-            if (key == GLFW_KEY_H and action == GLFW_PRESS) {
-                src = "H";
-            }
-            if (key == GLFW_KEY_1 and action == GLFW_PRESS) {
-                src += "1";
-                std::cout << src << std::endl;
-                ind = false;
-            }
-            if (key == GLFW_KEY_2 and action == GLFW_PRESS) {
-                src += "2";
-                std::cout << src << std::endl;
-                ind = false;
-            }
-            if (key == GLFW_KEY_3 and action == GLFW_PRESS) {
-                src += "3";
-                std::cout << src << std::endl;
-                ind = false;
-            }
-            if (key == GLFW_KEY_4 and action == GLFW_PRESS) {
-                src += "4";
-                std::cout << src << std::endl;
-                ind = false;
-            }
-            if (key == GLFW_KEY_5 and action == GLFW_PRESS) {
-                src += "5";
-                std::cout << src << std::endl;
-                ind = false;
-            }
-            if (key == GLFW_KEY_6 and action == GLFW_PRESS) {
-                src += "6";
-                std::cout << src << std::endl;
-                ind = false;
-            }
-            if (key == GLFW_KEY_7 and action == GLFW_PRESS) {
-                src += "7";
-                std::cout << src << std::endl;
-                ind = false;
-            }
-            if (key == GLFW_KEY_8 and action == GLFW_PRESS) {
-                src += "8";
-                std::cout << src << std::endl;
-                ind = false;
-            }
+    if (ind == true) { //ako je true, treba nam src
+        if (key == GLFW_KEY_A and action == GLFW_PRESS) {
+            src = "A";
         }
-//---------------------------------------------------
-        else { //ako je false, treba nam dest
-            if (key == GLFW_KEY_A and action == GLFW_PRESS) {
-                dest = "A";
-            }
-            if (key == GLFW_KEY_B and action == GLFW_PRESS) {
-                dest = "B";
-            }
-            if (key == GLFW_KEY_C and action == GLFW_PRESS) {
-                dest = "C";
-            }
-            if (key == GLFW_KEY_D and action == GLFW_PRESS) {
-                dest = "D";
-            }
-            if (key == GLFW_KEY_E and action == GLFW_PRESS) {
-                dest = "E";
-            }
-            if (key == GLFW_KEY_F and action == GLFW_PRESS) {
-                dest = "F";
-
-            }
-            if (key == GLFW_KEY_G and action == GLFW_PRESS) {
-                dest = "G";
-            }
-            if (key == GLFW_KEY_H and action == GLFW_PRESS) {
-                dest = "H";
-            }
-            if (key == GLFW_KEY_1 and action == GLFW_PRESS) {
-                dest += "1";
-                std::cout << dest << std::endl;
-                mapafigurica[src]->setField(dest);
-
-                ind = true;
-            }
-            if (key == GLFW_KEY_2 and action == GLFW_PRESS) {
-                dest += "2";
-                std::cout << dest << std::endl;
-                mapafigurica[src]->setField(dest);
-                ind = true;
-            }
-            if (key == GLFW_KEY_3 and action == GLFW_PRESS) {
-                dest += "3";
-                std::cout << dest << std::endl;
-                mapafigurica[src]->setField(dest);
-                ind = true;
-            }
-            if (key == GLFW_KEY_4 and action == GLFW_PRESS) {
-                dest += "4";
-                std::cout << dest << std::endl;
-                mapafigurica[src]->setField(dest);
-                ind = true;
-            }
-            if (key == GLFW_KEY_5 and action == GLFW_PRESS) {
-                dest += "5";
-                std::cout << dest << std::endl;
-                mapafigurica[src]->setField(dest);
-                ind = true;
-            }
-            if (key == GLFW_KEY_6 and action == GLFW_PRESS) {
-                dest += "6";
-                std::cout << dest << std::endl;
-                mapafigurica[src]->setField(dest);
-                ind = true;
-            }
-            if (key == GLFW_KEY_7 and action == GLFW_PRESS) {
-                dest += "7";
-                std::cout << dest << std::endl;
-                mapafigurica[src]->setField(dest);
-                ind = true;
-            }
-            if (key == GLFW_KEY_8 and action == GLFW_PRESS) {
-                dest += "8";
-                std::cout << dest << std::endl;
-                mapafigurica[src]->setField(dest);
-
-                ind = true;
-            }
+        if (key == GLFW_KEY_B and action == GLFW_PRESS) {
+            src = "B";
         }
+        if (key == GLFW_KEY_C and action == GLFW_PRESS) {
+            src = "C";
+        }
+        if (key == GLFW_KEY_D and action == GLFW_PRESS) {
+            src = "D";
+        }
+        if (key == GLFW_KEY_E and action == GLFW_PRESS) {
+            src = "E";
+        }
+        if (key == GLFW_KEY_F and action == GLFW_PRESS) {
+            src = "F";
 
+        }
+        if (key == GLFW_KEY_G and action == GLFW_PRESS) {
+            src = "G";
+        }
+        if (key == GLFW_KEY_H and action == GLFW_PRESS) {
+            src = "H";
+        }
+        if (key == GLFW_KEY_1 and action == GLFW_PRESS) {
+            src += "1";
+            std::cout << src << std::endl;
+            ind = false;
+        }
+        if (key == GLFW_KEY_2 and action == GLFW_PRESS) {
+            src += "2";
+            std::cout << src << std::endl;
+            ind = false;
+        }
+        if (key == GLFW_KEY_3 and action == GLFW_PRESS) {
+            src += "3";
+            std::cout << src << std::endl;
+            ind = false;
+        }
+        if (key == GLFW_KEY_4 and action == GLFW_PRESS) {
+            src += "4";
+            std::cout << src << std::endl;
+            ind = false;
+        }
+        if (key == GLFW_KEY_5 and action == GLFW_PRESS) {
+            src += "5";
+            std::cout << src << std::endl;
+            ind = false;
+        }
+        if (key == GLFW_KEY_6 and action == GLFW_PRESS) {
+            src += "6";
+            std::cout << src << std::endl;
+            ind = false;
+        }
+        if (key == GLFW_KEY_7 and action == GLFW_PRESS) {
+            src += "7";
+            std::cout << src << std::endl;
+            ind = false;
+        }
+        if (key == GLFW_KEY_8 and action == GLFW_PRESS) {
+            src += "8";
+            std::cout << src << std::endl;
+            ind = false;
+        }
     }
+//---------------------------------------------------
+    else { //ako je false, treba nam dest
+        if (key == GLFW_KEY_A and action == GLFW_PRESS) {
+            dest = "A";
+        }
+        if (key == GLFW_KEY_B and action == GLFW_PRESS) {
+            dest = "B";
+        }
+        if (key == GLFW_KEY_C and action == GLFW_PRESS) {
+            dest = "C";
+        }
+        if (key == GLFW_KEY_D and action == GLFW_PRESS) {
+            dest = "D";
+        }
+        if (key == GLFW_KEY_E and action == GLFW_PRESS) {
+            dest = "E";
+        }
+        if (key == GLFW_KEY_F and action == GLFW_PRESS) {
+            dest = "F";
 
-    // kad je dest postavljne tebi treba da ovome iz srca postavis dest
+        }
+        if (key == GLFW_KEY_G and action == GLFW_PRESS) {
+            dest = "G";
+        }
+        if (key == GLFW_KEY_H and action == GLFW_PRESS) {
+            dest = "H";
+        }
+        if (key == GLFW_KEY_1 and action == GLFW_PRESS) {
+            dest += "1";
+            std::cout << dest << std::endl;
+            if(mapafigurica[src] != nullptr){
+                mapafigurica[src]->setField(dest);
+                mapafigurica[dest] = mapafigurica[src];
+                mapafigurica[src] = nullptr;
+            }
+            ind = true;
+        }
+        if (key == GLFW_KEY_2 and action == GLFW_PRESS) {
+            dest += "2";
+            std::cout << dest << std::endl;
+            if(mapafigurica[src] != nullptr){
+                mapafigurica[src]->setField(dest);
+                mapafigurica[dest] = mapafigurica[src];
+                mapafigurica[src] = nullptr;
+            }
+            ind = true;
+        }
+        if (key == GLFW_KEY_3 and action == GLFW_PRESS) {
+            dest += "3";
+            std::cout << dest << std::endl;
+            if(mapafigurica[src] != nullptr){
+                mapafigurica[src]->setField(dest);
+                mapafigurica[dest] = mapafigurica[src];
+                mapafigurica[src] = nullptr;
+            }
+            ind = true;
+        }
+        if (key == GLFW_KEY_4 and action == GLFW_PRESS) {
+            dest += "4";
+            std::cout << dest << std::endl;
+            if(mapafigurica[src] != nullptr){
+                mapafigurica[src]->setField(dest);
+                mapafigurica[dest] = mapafigurica[src];
+                mapafigurica[src] = nullptr;
+            }
+            ind = true;
+        }
+        if (key == GLFW_KEY_5 and action == GLFW_PRESS) {
+            dest += "5";
+            std::cout << dest << std::endl;
+            if(mapafigurica[src] != nullptr){
+                mapafigurica[src]->setField(dest);
+                mapafigurica[dest] = mapafigurica[src];
+                mapafigurica[src] = nullptr;
+            }
+            ind = true;
+        }
+        if (key == GLFW_KEY_6 and action == GLFW_PRESS) {
+            dest += "6";
+            std::cout << dest << std::endl;
+            if(mapafigurica[src] != nullptr){
+                mapafigurica[src]->setField(dest);
+                mapafigurica[dest] = mapafigurica[src];
+                mapafigurica[src] = nullptr;
+            }
+            ind = true;
+        }
+        if (key == GLFW_KEY_7 and action == GLFW_PRESS) {
+            dest += "7";
+            std::cout << dest << std::endl;
+            if(mapafigurica[src] != nullptr){
+                mapafigurica[src]->setField(dest);
+                mapafigurica[dest] = mapafigurica[src];
+                mapafigurica[src] = nullptr;
+            }
+            ind = true;
+        }
+        if (key == GLFW_KEY_8 and action == GLFW_PRESS) {
+            dest += "8";
+            std::cout << dest << std::endl;
+            if(mapafigurica[src] != nullptr){
+                mapafigurica[src]->setField(dest);
+                mapafigurica[dest] = mapafigurica[src];
+                mapafigurica[src] = nullptr;
+            }
+            ind = true;
+        }
+    }
+}
+
+
+

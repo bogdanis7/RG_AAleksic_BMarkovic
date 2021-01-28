@@ -6,7 +6,7 @@ CXX_FLAGS = -Wall -Wextra -Wno-unused-variable -Wno-unused-parameter -O3 -g   -s
 
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I"/home/bogdanis/Desktop/3. godina/RG/RG_AAleksic_BMarkovic/cmake-build-debug/configuration" -I"/home/bogdanis/Desktop/3. godina/RG/RG_AAleksic_BMarkovic/include" 
+CXX_INCLUDES = -I/home/andri/Desktop/kurac/RG_AAleksic_BMarkovic/cmake-build-debug/configuration -I/home/andri/Desktop/kurac/RG_AAleksic_BMarkovic/include 
 
 # Custom flags: CMakeFiles/STB_IMAGE.dir/libs/stb_image.cpp.o_FLAGS = -Wno-shift-negative-value -Wno-implicit-fallthrough
 
