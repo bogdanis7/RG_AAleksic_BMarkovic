@@ -198,7 +198,7 @@ glm::vec3 cubePositions[] = {
             z = j;
             j--;
             x = 0;
-            for(float i = 1 ; i <= 7; i++){
+            for(float i = 1 ; i <= 8; i++){
                 x = 8-i ;
 
                 vec = {x,y,z};
@@ -228,22 +228,22 @@ glm::vec3 cubePositions[] = {
         f14 = new Figure("F2");
         f15 = new Figure("G2");
         f16 = new Figure("H2");
-        f17 = new Figure("B1");
-        f18= new Figure("G1");
-        f19= new Figure("A1");
-        f20= new Figure("C1");
-        f21= new Figure("A1");
-        f22= new Figure("D1");
-        f23= new Figure("E1");
-        f24= new Figure("F1");
-        f25= new Figure("A2");
-        f26 = new Figure("B2");
-        f27 = new Figure("C2");
-        f28 = new Figure("D2");
-        f29 = new Figure("E2");
-        f30 = new Figure("F2");
-        f31 = new Figure("G2");
-        f32 = new Figure("H2");
+        f17 = new Figure("E8");
+        f18= new Figure("D8");
+        f19= new Figure("A7");
+        f20= new Figure("B8");
+        f21= new Figure("G8");
+        f22= new Figure("F8");
+        f23= new Figure("C8");
+        f24= new Figure("B7");
+        f25= new Figure("A8");
+        f26 = new Figure("H8");
+        f27 = new Figure("H7");
+        f28 = new Figure("G7");
+        f29 = new Figure("F7");
+        f30 = new Figure("E7");
+        f31 = new Figure("D7");
+        f32 = new Figure("C7");
 
 
 
@@ -263,22 +263,22 @@ glm::vec3 cubePositions[] = {
         mapafigurica["F5"] = f14;
         mapafigurica["G5"] = f15;
         mapafigurica["H5"]=f16;
-        mapafigurica["B6"] = f17;
-        mapafigurica["G6"] = f18;
-        mapafigurica["A6"] = f19;
-        mapafigurica["C6"] = f20;
-        mapafigurica["A6"] = f21;
-        mapafigurica["D6"] = f22;
-        mapafigurica["E6"] = f23;
-        mapafigurica["F6"]= f24;
-        mapafigurica["A5"] = f25;
-        mapafigurica["B5"] = f26;
-        mapafigurica["C5"] = f27;
-        mapafigurica["D5"] = f28;
-        mapafigurica["E5"] = f29;
-        mapafigurica["F5"] = f30;
-        mapafigurica["G5"] = f31;
-        mapafigurica["H5"]=f32;
+        mapafigurica["E8"] = f17;
+        mapafigurica["D8"] = f18;
+        mapafigurica["A7"] = f19;
+        mapafigurica["B8"] = f20;
+        mapafigurica["G8"] = f21;
+        mapafigurica["F8"] = f22;
+        mapafigurica["C8"] = f23;
+        mapafigurica["B7"]= f24;
+        mapafigurica["A8"] = f25;
+        mapafigurica["H8"] = f26;
+        mapafigurica["H7"] = f27;
+        mapafigurica["G7"] = f28;
+        mapafigurica["F7"] = f29;
+        mapafigurica["E7"] = f30;
+        mapafigurica["D7"] = f31;
+        mapafigurica["C7"]=f32;
 
 
 
@@ -642,22 +642,22 @@ glm::vec3 cubePositions[] = {
             string field14= f14->getField();
             string field15= f15->getField();
             string field16= f16->getField();
-            string field17 = f->getField();
-            string field18= f2->getField();
-            string field19= f3->getField();
-            string field20= f4->getField();
-            string field21= f5->getField();
-            string field22= f6->getField();
-            string field23= f7->getField();
-            string field24= f8->getField();
-            string field25= f9->getField();
-            string field26 = f10->getField();
-            string field27 = f11->getField();
-            string field28= f12->getField();
-            string field29= f13->getField();
-            string field30= f14->getField();
-            string field31= f15->getField();
-            string field32= f16->getField();
+            string field17 = f17->getField();
+            string field18= f18->getField();
+            string field19= f19->getField();
+            string field20= f20->getField();
+            string field21= f21->getField();
+            string field22= f22->getField();
+            string field23= f23->getField();
+            string field24= f24->getField();
+            string field25= f25->getField();
+            string field26 = f26->getField();
+            string field27 = f27->getField();
+            string field28= f28->getField();
+            string field29= f29->getField();
+            string field30= f30->getField();
+            string field31= f31->getField();
+            string field32= f32->getField();
 
 
 
@@ -840,7 +840,7 @@ glm::vec3 cubePositions[] = {
             kraljA.Draw(modelShader);
 
             model = glm::mat4(1.0f);
-            model = glm::translate(model,glm::vec3(mapa[field17][0]-12.85f, mapa[field17][1], mapa[field17][2]-2.5f)); // translate it down so it's at the center of the scene
+            model = glm::translate(model,glm::vec3(mapa[field17][0]-5.9f, mapa[field17][1], mapa[field17][2]-2.6f)); // translate it down so it's at the center of the scene
             model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
             model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
             model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
@@ -849,7 +849,7 @@ glm::vec3 cubePositions[] = {
             kraljB.Draw(modelShader);
 
             model = glm::mat4(1.0f);
-            model = glm::translate(model,glm::vec3(mapa[field18][0]-12.85f, mapa[field18][1], mapa[field18][2]-2.5f)); // translate it down so it's at the center of the scene
+            model = glm::translate(model,glm::vec3(mapa[field18][0]-5.9f, mapa[field18][1], mapa[field18][2]-1.8f)); // translate it down so it's at the center of the scene
             model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
             model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
             model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
@@ -858,7 +858,7 @@ glm::vec3 cubePositions[] = {
             kraljicaB.Draw(modelShader);
 
             model = glm::mat4(1.0f);
-            model = glm::translate(model,glm::vec3(mapa[field20][0]-12.85f, mapa[field20][1], mapa[field20][2]-2.5f)); // translate it down so it's at the center of the scene
+            model = glm::translate(model,glm::vec3(mapa[field20][0]-5.85f, mapa[field20][1], mapa[field20][2]-4.4f)); // translate it down so it's at the center of the scene
             model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
             model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
             model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
@@ -867,7 +867,7 @@ glm::vec3 cubePositions[] = {
             konjB.Draw(modelShader);
 
             model = glm::mat4(1.0f);
-            model = glm::translate(model,glm::vec3(mapa[field21][0]-12.85f, mapa[field21][1], mapa[field21][2]-2.5f)); // translate it down so it's at the center of the scene
+            model = glm::translate(model,glm::vec3(mapa[field21][0]-5.85f, mapa[field21][1], mapa[field21][2]-4.4f)); // translate it down so it's at the center of the scene
             model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
             model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
             model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
@@ -876,7 +876,7 @@ glm::vec3 cubePositions[] = {
             konjB.Draw(modelShader);
 
             model = glm::mat4(1.0f);
-            model = glm::translate(model,glm::vec3(mapa[field22][0]-12.85f, mapa[field22][1], mapa[field22][2]-2.5f)); // translate it down so it's at the center of the scene
+            model = glm::translate(model,glm::vec3(mapa[field22][0]-5.9f, mapa[field22][1], mapa[field22][2]-3.5f)); // translate it down so it's at the center of the scene
             model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
             model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
             model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
@@ -885,7 +885,7 @@ glm::vec3 cubePositions[] = {
             lovacB.Draw(modelShader);
 
             model = glm::mat4(1.0f);
-            model = glm::translate(model,glm::vec3(mapa[field23][0]-12.85f, mapa[field23][1], mapa[field23][2]-2.5f)); // translate it down so it's at the center of the scene
+            model = glm::translate(model,glm::vec3(mapa[field23][0]-5.9f, mapa[field23][1], mapa[field23][2]-3.5f)); // translate it down so it's at the center of the scene
             model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
             model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
             model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
@@ -895,7 +895,7 @@ glm::vec3 cubePositions[] = {
 
 
             model = glm::mat4(1.0f);
-            model = glm::translate(model,glm::vec3(mapa[field25][0]-12.85f, mapa[field25][1], mapa[field25][2]-2.5f)); // translate it down so it's at the center of the scene
+            model = glm::translate(model,glm::vec3(mapa[field25][0]-5.9f, mapa[field25][1], mapa[field25][2]-5.3f)); // translate it down so it's at the center of the scene
             model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
             model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
             model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
@@ -904,7 +904,7 @@ glm::vec3 cubePositions[] = {
             topB.Draw(modelShader);
 
             model = glm::mat4(1.0f);
-            model = glm::translate(model,glm::vec3(mapa[field26][0]-12.85f, mapa[field26][1], mapa[field26][2]-2.5f)); // translate it down so it's at the center of the scene
+            model = glm::translate(model,glm::vec3(mapa[field26][0]-5.9f, mapa[field26][1], mapa[field26][2]-5.3f)); // translate it down so it's at the center of the scene
             model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
             model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
             model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
@@ -915,7 +915,7 @@ glm::vec3 cubePositions[] = {
 
 
             model = glm::mat4(1.0f);
-            model = glm::translate(model,glm::vec3(mapa[field27][0]-0.9f-10.85f, mapa[field27][1], mapa[field27][2]+1.9f)); // translate it down so it's at the center of the scene
+            model = glm::translate(model,glm::vec3(mapa[field27][0]-4.9f, mapa[field27][1], mapa[field27][2]-5.15f)); // translate it down so it's at the center of the scene
             model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
             model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
             model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
@@ -924,7 +924,7 @@ glm::vec3 cubePositions[] = {
             piunB.Draw(modelShader);
 
             model = glm::mat4(1.0f);
-            model = glm::translate(model,glm::vec3(mapa[field28][0]-0.9f-10.85f, mapa[field28][1], mapa[field28][2]+1.9f)); // translate it down so it's at the center of the scene
+            model = glm::translate(model,glm::vec3(mapa[field28][0]-4.9f, mapa[field28][1], mapa[field28][2]-5.15f)); // translate it down so it's at the center of the scene
             model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
             model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
             model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
@@ -933,7 +933,7 @@ glm::vec3 cubePositions[] = {
             piunB.Draw(modelShader);
 
             model = glm::mat4(1.0f);
-            model = glm::translate(model,glm::vec3(mapa[field29][0]-0.9f-10.85f, mapa[field29][1], mapa[field29][2]+1.9f)); // translate it down so it's at the center of the scene
+            model = glm::translate(model,glm::vec3(mapa[field29][0]-4.9f, mapa[field29][1], mapa[field29][2]-5.15f)); // translate it down so it's at the center of the scene
             model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
             model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
             model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
@@ -942,7 +942,7 @@ glm::vec3 cubePositions[] = {
             piunB.Draw(modelShader);
 
             model = glm::mat4(1.0f);
-            model = glm::translate(model,glm::vec3(mapa[field30][0]-0.9f-10.85f, mapa[field30][1], mapa[field30][2]+1.9f)); // translate it down so it's at the center of the scene
+            model = glm::translate(model,glm::vec3(mapa[field30][0]-4.9f, mapa[field30][1], mapa[field30][2]-5.15f)); // translate it down so it's at the center of the scene
             model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
             model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
             model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
@@ -951,7 +951,7 @@ glm::vec3 cubePositions[] = {
             piunB.Draw(modelShader);
 
             model = glm::mat4(1.0f);
-            model = glm::translate(model,glm::vec3(mapa[field31][0]-0.9f-10.85f, mapa[field31][1], mapa[field31][2]+1.9f)); // translate it down so it's at the center of the scene
+            model = glm::translate(model,glm::vec3(mapa[field31][0]-4.9f, mapa[field31][1], mapa[field31][2]-5.15f)); // translate it down so it's at the center of the scene
             model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
             model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
             model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
@@ -960,7 +960,7 @@ glm::vec3 cubePositions[] = {
             piunB.Draw(modelShader);
 
             model = glm::mat4(1.0f);
-            model = glm::translate(model,glm::vec3(mapa[field32][0]-0.9f-10.85f, mapa[field32][1], mapa[field32][2]+1.9f)); // translate it down so it's at the center of the scene
+            model = glm::translate(model,glm::vec3(mapa[field32][0]-4.9f, mapa[field32][1], mapa[field32][2]-5.2f)); // translate it down so it's at the center of the scene
             model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
             model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
             model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
@@ -969,7 +969,7 @@ glm::vec3 cubePositions[] = {
             piunB.Draw(modelShader);
 
             model = glm::mat4(1.0f);
-            model = glm::translate(model,glm::vec3(mapa[field24][0]-0.9f-10.85f, mapa[field24][1], mapa[field24][2]+1.9f)); // translate it down so it's at the center of the scene
+            model = glm::translate(model,glm::vec3(mapa[field24][0]-4.9f, mapa[field24][1], mapa[field24][2]-5.15f)); // translate it down so it's at the center of the scene
             model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
             model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
             model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
@@ -978,7 +978,7 @@ glm::vec3 cubePositions[] = {
             piunB.Draw(modelShader);
 
             model = glm::mat4(1.0f);
-            model = glm::translate(model,glm::vec3(mapa[field19][0]-0.9f-10.85f, mapa[field19][1], mapa[field19][2]+1.9f)); // translate it down so it's at the center of the scene
+            model = glm::translate(model,glm::vec3(mapa[field19][0]-4.9f, mapa[field19][1], mapa[field19][2]-5.13f)); // translate it down so it's at the center of the scene
             model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
             model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
             model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));

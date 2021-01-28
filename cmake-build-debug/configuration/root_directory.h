@@ -1,1 +1,1 @@
-const char * logl_root = "/home/andri/Desktop/kurac/RG_AAleksic_BMarkovic";
+const char * logl_root = "/home/andri/Desktop/proj/RG_AAleksic_BMarkovic";
