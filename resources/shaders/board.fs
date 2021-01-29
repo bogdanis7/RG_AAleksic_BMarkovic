@@ -30,7 +30,6 @@ void main()
     vec3 ambient=light.ambient*texture(material.diffuse, TexCoords).rgb;
 
     //difuzna
-    //za sad samo difuzna mapa
     vec3 norm=normalize(Normal);
     //pravac svetla=pozicija svetla-pozicija fragmenta
     vec3 lightDir=normalize(-light.direction);

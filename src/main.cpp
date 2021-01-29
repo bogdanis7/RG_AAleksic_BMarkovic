@@ -31,6 +31,7 @@ const unsigned int SCR_HEIGHT = 600;
 //inicijalizacija
 
 void drawModel(Model model1, Shader modelShader, float x, float y, float z);
+unsigned int loadTexture(char const * path);
 
 unsigned int loadCubemap(vector<string> vector);
 
@@ -216,7 +217,6 @@ glm::vec3 cubePositions[] = {
             }
         }
 
-
         f = new Figure("B1");
         f2 = new Figure("G1");
         f3 = new Figure("H1");
@@ -284,13 +284,6 @@ glm::vec3 cubePositions[] = {
         mapafigurica["E7"] = f30;
         mapafigurica["D7"] = f31;
         mapafigurica["C7"]=f32;
-
-
-
-
-
-
-
 
 #ifdef __APPLE__
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
@@ -520,16 +513,6 @@ glm::vec3 cubePositions[] = {
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 
-
-//        vector<std::string> faces
-//                {
-//                        FileSystem::getPath("resources/textures/UnionSquare/right.jpg"),
-//                        FileSystem::getPath("resources/textures/UnionSquare/left.jpg"),
-//                        FileSystem::getPath("resources/textures/UnionSquare/top.jpg"),
-//                        FileSystem::getPath("resources/textures/UnionSquare/bottom.jpg"),
-//                        FileSystem::getPath("resources/textures/UnionSquare/posz.jpg"),
-//                        FileSystem::getPath("resources/textures/UnionSquare/back.jpg")
-//                };
         vector<std::string> faces
                 {
                         FileSystem::getPath("resources/textures/PiazzaDelPopolo1/posx.jpg"),
@@ -542,69 +525,20 @@ glm::vec3 cubePositions[] = {
 
         unsigned int cubemapTexture =  loadCubemap(faces);
 
-
         // load and create a texture
         // -------------------------
 
-        //TODO funkcija za ucitavanje tekstura
-        unsigned int diffuseMap;
-        // texture 1
-        // ---------
-        glGenTextures(1, &diffuseMap);
-        glBindTexture(GL_TEXTURE_2D, diffuseMap);
-        // set the texture wrapping parameters
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-        // set texture filtering parameters
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        // load image, create texture and generate mipmaps
-        int width, height, nrChannels;
-        stbi_set_flip_vertically_on_load(true); // tell stb_image.h to flip loaded texture's on the y-axis.
-        unsigned char *data = stbi_load(FileSystem::getPath("resources/textures/chess4.png").c_str(), &width, &height, &nrChannels, 0);
-        if (data)
-        {
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-            glGenerateMipmap(GL_TEXTURE_2D);
-        }
-        else
-        {
-            std::cout << "Failed to load texture" << std::endl;
-        }
-        stbi_image_free(data);
-
-
+        //tekstura za tablu
+        unsigned int diffuseMap = loadTexture(FileSystem::getPath("resources/textures/chess4.png").c_str());
 
         boardShader.use();
-        boardShader.setInt("diffuse", 0);
-
+        boardShader.setInt("material.diffuse", 0);
 
         //tekstura za podlogu
-        unsigned int texture2;
-        glGenTextures(1, &texture2);
-        glBindTexture(GL_TEXTURE_2D, texture2);
-        // set the texture wrapping parameters
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// set texture wrapping to GL_REPEAT (default wrapping method)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-        // set texture filtering parameters
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        // load image, create texture and generate mipmaps
-        data = stbi_load(FileSystem::getPath("resources/textures/chess4.png").c_str(), &width, &height, &nrChannels, 0);
-        if (data)
-        {
-            // note that the awesomeface.png has transparency and thus an alpha channel, so make sure to tell OpenGL the data type is of GL_RGBA
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-            glGenerateMipmap(GL_TEXTURE_2D);
-        }
-        else
-        {
-            std::cout << "Failed to load texture" << std::endl;
-        }
-        stbi_image_free(data);
+        unsigned int texture2 = loadTexture(FileSystem::getPath("resources/textures/seamless_rock_texture_by_texturesart_dbt0ept-fullview.jpeg").c_str());
 
         ourShader.use();
-        ourShader.setInt("texture2", 1);
+        ourShader.setInt("texture2", 0);
 
         skyShader.use();
         skyShader.setInt("skybox", 0);
@@ -679,7 +613,7 @@ glm::vec3 cubePositions[] = {
             glBindVertexArray(lightVAO);
             glDrawArrays(GL_TRIANGLES, 0, 36);
 
-            glActiveTexture(GL_TEXTURE1);
+            glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, texture2);
             // activate shader
             ourShader.use();
@@ -740,8 +674,6 @@ glm::vec3 cubePositions[] = {
                 else
                     ourShader.setVec3("color", 0.0f, 0.0f, 0.0f);
 
-                glActiveTexture(GL_TEXTURE1);
-                glBindTexture(GL_TEXTURE_2D, texture2);
                 glDrawArrays(GL_TRIANGLES, 0, 36);
             }
 
@@ -1153,5 +1085,40 @@ void drawModel (Model model1, Shader modelShader, float x, float y, float z){
     model1.Draw(modelShader);
 }
 
+unsigned int loadTexture(char const * path)
+{
+    unsigned int textureID;
+    glGenTextures(1, &textureID);
 
+    int width, height, nrComponents;
+    unsigned char *data = stbi_load(path, &width, &height, &nrComponents, 0);
+    if (data)
+    {
+        GLenum format;
+        if (nrComponents == 1)
+            format = GL_RED;
+        else if (nrComponents == 3)
+            format = GL_RGB;
+        else if (nrComponents == 4)
+            format = GL_RGBA;
+
+        glBindTexture(GL_TEXTURE_2D, textureID);
+        glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+        stbi_image_free(data);
+    }
+    else
+    {
+        std::cout << "Texture failed to load at path: " << path << std::endl;
+        stbi_image_free(data);
+    }
+
+    return textureID;
+}
 
