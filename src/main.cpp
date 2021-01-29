@@ -25,8 +25,8 @@ void key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
 void scroll_callback(GLFWwindow *window, double xoffset, double yoffset);
 void processInput(GLFWwindow *window);
 // settings
-const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 600;
+const unsigned int SCR_WIDTH = 1200;
+const unsigned int SCR_HEIGHT = 900;
 
 //inicijalizacija
 
@@ -88,7 +88,7 @@ vector<int> translate_ind;
 //glm::vec3 cameraFront = glm::vec3(0.0f, 1.0f, -3.0f);
 //glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 
-Camera camera(glm::vec3(0.0f, 0.0f, 10.0f));
+Camera camera(glm::vec3(0.5f, 3.0f, 16.0f));
 
 bool firstMouse = true;
 float yaw = -90.0f;    // yaw is initialized to -90.0 degrees since a yaw of 0.0 results in a direction vector pointing to the right so we initially rotate a bit to the left.
@@ -535,7 +535,7 @@ glm::vec3 cubePositions[] = {
         boardShader.setInt("material.diffuse", 0);
 
         //tekstura za podlogu
-        unsigned int texture2 = loadTexture(FileSystem::getPath("resources/textures/seamless_rock_texture_by_texturesart_dbt0ept-fullview.jpeg").c_str());
+        unsigned int texture2 = loadTexture(FileSystem::getPath("resources/textures/826a531ab12e32b4a908d516a5ae4ffd.jpeg").c_str());
 
         ourShader.use();
         ourShader.setInt("texture2", 0);
@@ -607,7 +607,7 @@ glm::vec3 cubePositions[] = {
             lightShader.setMat4("view", view);
             model = glm::mat4(1.0f);
             model = glm::translate(model, lightPos);
-            model = glm::scale(model, glm::vec3(2.0f));
+            model = glm::scale(model, glm::vec3(1.5f));
             lightShader.setMat4("model", model);
 
             glBindVertexArray(lightVAO);
