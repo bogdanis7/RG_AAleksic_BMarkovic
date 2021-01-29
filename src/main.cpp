@@ -30,6 +30,8 @@ const unsigned int SCR_HEIGHT = 600;
 
 //inicijalizacija
 
+void drawModel(Model model1, Shader modelShader, float x, float y, float z);
+
 unsigned int loadCubemap(vector<string> vector);
 
 static Figure *f;
@@ -320,18 +322,6 @@ glm::vec3 cubePositions[] = {
             return -1;
         }
 
-//        glm::vec3 pointLightPositions[] = {
-//                glm::vec3( 1.f,  0.f,  1.0f),
-//                glm::vec3( 19.f,  -20.f, 1.0f),
-//                glm::vec3( 19.f,  0.f, 1.0f),
-//                glm::vec3( 1.f,  -20.0f, 1.0f),
-//                glm::vec3(4.f,-8.f,1.f),
-//                glm::vec3(4.f,-10.f,1.f),
-//                glm::vec3(16.f,-8.f,1.f),
-//                glm::vec3(16.f,-10.f,1.f),
-//        };
-
-
         // configure global opengl state
         // -----------------------------
         glEnable(GL_DEPTH_TEST);
@@ -359,6 +349,7 @@ glm::vec3 cubePositions[] = {
         Model kraljicaB(FileSystem::getPath("resources/objects/kraljicab/12933_Wooden_Chess_Queen_side_b_v1_l3.obj"));
         Model kraljB(FileSystem::getPath("resources/objects/kraljb/12932_Wooden_Chess_King_Side_B_V2_l3.obj"));
         Model piunB(FileSystem::getPath("resources/objects/piunb/12937_Wooden_Chess_Pawn_Side_B_V2_L3.obj"));
+
         Model rock(FileSystem::getPath("resources/objects/rock/rock.obj"));
 
         rock.SetShaderTextureNamePrefix("material.");
@@ -612,13 +603,11 @@ glm::vec3 cubePositions[] = {
         }
         stbi_image_free(data);
 
-
         ourShader.use();
         ourShader.setInt("texture2", 1);
 
         skyShader.use();
         skyShader.setInt("skybox", 0);
-
 
         // render loop
         // -----------
@@ -674,9 +663,6 @@ glm::vec3 cubePositions[] = {
             boardShader.setMat4("view", view);
             boardShader.setMat4("model", model);
 
-
-
-
             glBindVertexArray(boardVAO);
             glDrawArrays(GL_TRIANGLES, 0, 6);
 
@@ -692,7 +678,6 @@ glm::vec3 cubePositions[] = {
 
             glBindVertexArray(lightVAO);
             glDrawArrays(GL_TRIANGLES, 0, 36);
-
 
             glActiveTexture(GL_TEXTURE1);
             glBindTexture(GL_TEXTURE_2D, texture2);
@@ -742,7 +727,6 @@ glm::vec3 cubePositions[] = {
             string field32= f32->getField();
 
 
-
             // render boxes
             glBindVertexArray(fieldsVAO);
             for (unsigned int i = 0; i < 64; i++) {
@@ -759,10 +743,6 @@ glm::vec3 cubePositions[] = {
                 glActiveTexture(GL_TEXTURE1);
                 glBindTexture(GL_TEXTURE_2D, texture2);
                 glDrawArrays(GL_TRIANGLES, 0, 36);
-
-
-
-
             }
 
             //for figure in figures OVDE CE DA IDE
@@ -787,288 +767,45 @@ glm::vec3 cubePositions[] = {
             modelShader.setMat4("view", view);
 
 
+            drawModel(konjA, modelShader, mapa[field1][0], mapa[field1][1], mapa[field1][2]);
+            drawModel(konjA, modelShader, mapa[field2][0], mapa[field2][1], mapa[field2][2]);
 
-            model = glm::mat4(1.0f);
-            model = glm::translate(model,glm::vec3(mapa[field1][0], mapa[field1][1], mapa[field1][2])); // translate it down so it's at the center of the scene
-            model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
-            model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-            model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
-            model = glm::scale(model, glm::vec3(0.18f));    // it's a bit too big for our scene, so scale it down
-            modelShader.setMat4("model", model);
-            konjA.Draw(modelShader);
+            drawModel(lovacA, modelShader, mapa[field4][0]-0.02f, mapa[field4][1], mapa[field4][2]-0.9f);
+            drawModel(lovacA, modelShader, mapa[field8][0]-0.02f, mapa[field8][1], mapa[field8][2]-0.9f);
 
+            drawModel(piunA, modelShader, mapa[field16][0]-0.9, mapa[field16][1], mapa[field16][2]+0.9f);
+            drawModel(piunA, modelShader, mapa[field9][0]-0.9, mapa[field9][1], mapa[field9][2]+0.9f);
+            drawModel(piunA, modelShader, mapa[field10][0]-0.9, mapa[field10][1], mapa[field10][2]+0.9f);
+            drawModel(piunA, modelShader, mapa[field11][0]-0.9, mapa[field11][1], mapa[field11][2]+0.9f);
+            drawModel(piunA, modelShader, mapa[field12][0]-0.9, mapa[field12][1], mapa[field12][2]+0.9f);
+            drawModel(piunA, modelShader, mapa[field13][0]-0.9, mapa[field13][1], mapa[field13][2]+0.9f);
+            drawModel(piunA, modelShader, mapa[field14][0]-0.9, mapa[field14][1], mapa[field14][2]+0.9f);
+            drawModel(piunA, modelShader, mapa[field15][0]-0.9, mapa[field15][1], mapa[field15][2]+0.9f);
 
+            drawModel(kraljicaA, modelShader, mapa[field6][0], mapa[field6][1], mapa[field6][2]-1.7f);
 
-            model = glm::mat4(1.0f);
-            model = glm::translate(model,glm::vec3(mapa[field2][0], mapa[field2][1], mapa[field2][2])); // translate it down so it's at the center of the scene
-            model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
-            model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-            model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
-            model = glm::scale(model, glm::vec3(0.18f));    // it's a bit too big for our scene, so scale it down
-            modelShader.setMat4("model", model);
-            konjA.Draw(modelShader);
+            drawModel(kraljA, modelShader, mapa[field7][0], mapa[field7][1], mapa[field7][2]-2.5f);
+            drawModel(kraljB, modelShader, mapa[field17][0]-5.9f, mapa[field17][1], mapa[field17][2]-2.6f);
 
+            drawModel(kraljicaB, modelShader, mapa[field18][0]-5.9f, mapa[field18][1], mapa[field18][2]-1.8f);
 
+            drawModel(konjB, modelShader, mapa[field20][0]-5.85f, mapa[field20][1], mapa[field20][2]-4.4f);
+            drawModel(konjB, modelShader, mapa[field21][0]-5.85f, mapa[field21][1], mapa[field21][2]-4.4f);
 
+            drawModel(lovacB, modelShader, mapa[field22][0]-5.9f, mapa[field22][1], mapa[field22][2]-3.5f);
+            drawModel(lovacB, modelShader, mapa[field23][0]-5.9f, mapa[field23][1], mapa[field23][2]-3.5f);
 
-//
-            model = glm::mat4(1.0f);
-            model = glm::translate(model,glm::vec3(mapa[field4][0]-0.02f, mapa[field4][1], mapa[field4][2]-0.9f)); // translate it down so it's at the center of the scene
-            model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
-            model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-            model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
-            model = glm::scale(model, glm::vec3(0.18f));    // it's a bit too big for our scene, so scale it down
-            modelShader.setMat4("model", model);
-            lovacA.Draw(modelShader);
+            drawModel(topB, modelShader, mapa[field25][0]-5.9f, mapa[field25][1], mapa[field25][2]-5.3f);
+            drawModel(topB, modelShader, mapa[field26][0]-5.9f, mapa[field26][1], mapa[field26][2]-5.3f);
 
-            model = glm::mat4(1.0f);
-            model = glm::translate(model,glm::vec3(mapa[field8][0]-0.02f, mapa[field8][1], mapa[field8][2]-0.9f)); // translate it down so it's at the center of the scene
-            model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
-            model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-            model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
-            model = glm::scale(model, glm::vec3(0.18f));    // it's a bit too big for our scene, so scale it down
-            modelShader.setMat4("model", model);
-            lovacA.Draw(modelShader);
-
-            model = glm::mat4(1.0f);
-            model = glm::translate(model,glm::vec3(mapa[field16][0]-0.9, mapa[field16][1], mapa[field16][2]+0.9f)); // translate it down so it's at the center of the scene
-            model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
-            model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-            model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
-            model = glm::scale(model, glm::vec3(0.18f));    // it's a bit too big for our scene, so scale it down
-            modelShader.setMat4("model", model);
-            piunA.Draw(modelShader);
-
-            model = glm::mat4(1.0f);
-            model = glm::translate(model,glm::vec3(mapa[field9][0]-0.9, mapa[field9][1], mapa[field9][2]+0.9f)); // translate it down so it's at the center of the scene
-            model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
-            model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-            model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
-            model = glm::scale(model, glm::vec3(0.18f));    // it's a bit too big for our scene, so scale it down
-            modelShader.setMat4("model", model);
-            piunA.Draw(modelShader);
-
-            model = glm::mat4(1.0f);
-            model = glm::translate(model,glm::vec3(mapa[field10][0]-0.9, mapa[field10][1], mapa[field10][2]+0.9f)); // translate it down so it's at the center of the scene
-            model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
-            model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-            model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
-            model = glm::scale(model, glm::vec3(0.18f));    // it's a bit too big for our scene, so scale it down
-            modelShader.setMat4("model", model);
-            piunA.Draw(modelShader);
-
-            model = glm::mat4(1.0f);
-            model = glm::translate(model,glm::vec3(mapa[field11][0]-0.9, mapa[field11][1], mapa[field11][2]+0.9f)); // translate it down so it's at the center of the scene
-            model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
-            model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-            model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
-            model = glm::scale(model, glm::vec3(0.18f));    // it's a bit too big for our scene, so scale it down
-            modelShader.setMat4("model", model);
-            piunA.Draw(modelShader);
-
-            model = glm::mat4(1.0f);
-            model = glm::translate(model,glm::vec3(mapa[field12][0]-0.9, mapa[field12][1], mapa[field12][2]+0.9f)); // translate it down so it's at the center of the scene
-            model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
-            model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-            model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
-            model = glm::scale(model, glm::vec3(0.18f));    // it's a bit too big for our scene, so scale it down
-            modelShader.setMat4("model", model);
-            piunA.Draw(modelShader);
-
-            model = glm::mat4(1.0f);
-            model = glm::translate(model,glm::vec3(mapa[field13][0]-0.9, mapa[field13][1], mapa[field13][2]+0.9f)); // translate it down so it's at the center of the scene
-            model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
-            model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-            model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
-            model = glm::scale(model, glm::vec3(0.18f));    // it's a bit too big for our scene, so scale it down
-            modelShader.setMat4("model", model);
-            piunA.Draw(modelShader);
-
-            model = glm::mat4(1.0f);
-            model = glm::translate(model,glm::vec3(mapa[field14][0]-0.9, mapa[field14][1], mapa[field14][2]+0.9f)); // translate it down so it's at the center of the scene
-            model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
-            model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-            model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
-            model = glm::scale(model, glm::vec3(0.18f));    // it's a bit too big for our scene, so scale it down
-            modelShader.setMat4("model", model);
-            piunA.Draw(modelShader);
-
-            model = glm::mat4(1.0f);
-            model = glm::translate(model,glm::vec3(mapa[field15][0]-0.9, mapa[field15][1], mapa[field15][2]+0.9f)); // translate it down so it's at the center of the scene
-            model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
-            model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-            model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
-            model = glm::scale(model, glm::vec3(0.18f));    // it's a bit too big for our scene, so scale it down
-            modelShader.setMat4("model", model);
-            piunA.Draw(modelShader);
-
-
-            model = glm::mat4(1.0f);
-            model = glm::translate(model,glm::vec3(mapa[field6][0], mapa[field6][1], mapa[field6][2]-1.7f)); // translate it down so it's at the center of the scene
-            model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
-            model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-            model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
-            model = glm::scale(model, glm::vec3(0.18f));    // it's a bit too big for our scene, so scale it down
-            modelShader.setMat4("model", model);
-            kraljicaA.Draw(modelShader);
-
-            model = glm::mat4(1.0f);
-            model = glm::translate(model,glm::vec3(mapa[field7][0], mapa[field7][1], mapa[field7][2]-2.5f)); // translate it down so it's at the center of the scene
-            model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
-            model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-            model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
-            model = glm::scale(model, glm::vec3(0.18f));    // it's a bit too big for our scene, so scale it down
-            modelShader.setMat4("model", model);
-            kraljA.Draw(modelShader);
-
-            model = glm::mat4(1.0f);
-            model = glm::translate(model,glm::vec3(mapa[field17][0]-5.9f, mapa[field17][1], mapa[field17][2]-2.6f)); // translate it down so it's at the center of the scene
-            model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
-            model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-            model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
-            model = glm::scale(model, glm::vec3(0.18f));    // it's a bit too big for our scene, so scale it down
-            modelShader.setMat4("model", model);
-            kraljB.Draw(modelShader);
-
-            model = glm::mat4(1.0f);
-            model = glm::translate(model,glm::vec3(mapa[field18][0]-5.9f, mapa[field18][1], mapa[field18][2]-1.8f)); // translate it down so it's at the center of the scene
-            model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
-            model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-            model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
-            model = glm::scale(model, glm::vec3(0.18f));    // it's a bit too big for our scene, so scale it down
-            modelShader.setMat4("model", model);
-            kraljicaB.Draw(modelShader);
-
-            model = glm::mat4(1.0f);
-            model = glm::translate(model,glm::vec3(mapa[field20][0]-5.85f, mapa[field20][1], mapa[field20][2]-4.4f)); // translate it down so it's at the center of the scene
-            model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
-            model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-            model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
-            model = glm::scale(model, glm::vec3(0.18f));    // it's a bit too big for our scene, so scale it down
-            modelShader.setMat4("model", model);
-            konjB.Draw(modelShader);
-
-            model = glm::mat4(1.0f);
-            model = glm::translate(model,glm::vec3(mapa[field21][0]-5.85f, mapa[field21][1], mapa[field21][2]-4.4f)); // translate it down so it's at the center of the scene
-            model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
-            model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-            model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
-            model = glm::scale(model, glm::vec3(0.18f));    // it's a bit too big for our scene, so scale it down
-            modelShader.setMat4("model", model);
-            konjB.Draw(modelShader);
-
-            model = glm::mat4(1.0f);
-            model = glm::translate(model,glm::vec3(mapa[field22][0]-5.9f, mapa[field22][1], mapa[field22][2]-3.5f)); // translate it down so it's at the center of the scene
-            model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
-            model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-            model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
-            model = glm::scale(model, glm::vec3(0.18f));    // it's a bit too big for our scene, so scale it down
-            modelShader.setMat4("model", model);
-            lovacB.Draw(modelShader);
-
-            model = glm::mat4(1.0f);
-            model = glm::translate(model,glm::vec3(mapa[field23][0]-5.9f, mapa[field23][1], mapa[field23][2]-3.5f)); // translate it down so it's at the center of the scene
-            model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
-            model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-            model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
-            model = glm::scale(model, glm::vec3(0.18f));    // it's a bit too big for our scene, so scale it down
-            modelShader.setMat4("model", model);
-            lovacB.Draw(modelShader);
-
-
-            model = glm::mat4(1.0f);
-            model = glm::translate(model,glm::vec3(mapa[field25][0]-5.9f, mapa[field25][1], mapa[field25][2]-5.3f)); // translate it down so it's at the center of the scene
-            model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
-            model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-            model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
-            model = glm::scale(model, glm::vec3(0.18f));    // it's a bit too big for our scene, so scale it down
-            modelShader.setMat4("model", model);
-            topB.Draw(modelShader);
-
-            model = glm::mat4(1.0f);
-            model = glm::translate(model,glm::vec3(mapa[field26][0]-5.9f, mapa[field26][1], mapa[field26][2]-5.3f)); // translate it down so it's at the center of the scene
-            model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
-            model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-            model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
-            model = glm::scale(model, glm::vec3(0.18f));    // it's a bit too big for our scene, so scale it down
-            modelShader.setMat4("model", model);
-            topB.Draw(modelShader);
-
-
-
-            model = glm::mat4(1.0f);
-            model = glm::translate(model,glm::vec3(mapa[field27][0]-4.9f, mapa[field27][1], mapa[field27][2]-5.15f)); // translate it down so it's at the center of the scene
-            model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
-            model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-            model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
-            model = glm::scale(model, glm::vec3(0.18f));    // it's a bit too big for our scene, so scale it down
-            modelShader.setMat4("model", model);
-            piunB.Draw(modelShader);
-
-            model = glm::mat4(1.0f);
-            model = glm::translate(model,glm::vec3(mapa[field28][0]-4.9f, mapa[field28][1], mapa[field28][2]-5.15f)); // translate it down so it's at the center of the scene
-            model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
-            model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-            model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
-            model = glm::scale(model, glm::vec3(0.18f));    // it's a bit too big for our scene, so scale it down
-            modelShader.setMat4("model", model);
-            piunB.Draw(modelShader);
-
-            model = glm::mat4(1.0f);
-            model = glm::translate(model,glm::vec3(mapa[field29][0]-4.9f, mapa[field29][1], mapa[field29][2]-5.15f)); // translate it down so it's at the center of the scene
-            model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
-            model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-            model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
-            model = glm::scale(model, glm::vec3(0.18f));    // it's a bit too big for our scene, so scale it down
-            modelShader.setMat4("model", model);
-            piunB.Draw(modelShader);
-
-            model = glm::mat4(1.0f);
-            model = glm::translate(model,glm::vec3(mapa[field30][0]-4.9f, mapa[field30][1], mapa[field30][2]-5.15f)); // translate it down so it's at the center of the scene
-            model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
-            model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-            model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
-            model = glm::scale(model, glm::vec3(0.18f));    // it's a bit too big for our scene, so scale it down
-            modelShader.setMat4("model", model);
-            piunB.Draw(modelShader);
-
-            model = glm::mat4(1.0f);
-            model = glm::translate(model,glm::vec3(mapa[field31][0]-4.9f, mapa[field31][1], mapa[field31][2]-5.15f)); // translate it down so it's at the center of the scene
-            model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
-            model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-            model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
-            model = glm::scale(model, glm::vec3(0.18f));    // it's a bit too big for our scene, so scale it down
-            modelShader.setMat4("model", model);
-            piunB.Draw(modelShader);
-
-            model = glm::mat4(1.0f);
-            model = glm::translate(model,glm::vec3(mapa[field32][0]-4.9f, mapa[field32][1], mapa[field32][2]-5.2f)); // translate it down so it's at the center of the scene
-            model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
-            model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-            model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
-            model = glm::scale(model, glm::vec3(0.18f));    // it's a bit too big for our scene, so scale it down
-            modelShader.setMat4("model", model);
-            piunB.Draw(modelShader);
-
-            model = glm::mat4(1.0f);
-            model = glm::translate(model,glm::vec3(mapa[field24][0]-4.9f, mapa[field24][1], mapa[field24][2]-5.15f)); // translate it down so it's at the center of the scene
-            model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
-            model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-            model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
-            model = glm::scale(model, glm::vec3(0.18f));    // it's a bit too big for our scene, so scale it down
-            modelShader.setMat4("model", model);
-            piunB.Draw(modelShader);
-
-            model = glm::mat4(1.0f);
-            model = glm::translate(model,glm::vec3(mapa[field19][0]-4.9f, mapa[field19][1], mapa[field19][2]-5.13f)); // translate it down so it's at the center of the scene
-            model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
-            model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-            model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
-            model = glm::scale(model, glm::vec3(0.18f));    // it's a bit too big for our scene, so scale it down
-            modelShader.setMat4("model", model);
-            piunB.Draw(modelShader);
-
-
+            drawModel(piunB, modelShader, mapa[field27][0]-4.9f, mapa[field27][1], mapa[field27][2]-5.15f);
+            drawModel(piunB, modelShader, mapa[field28][0]-4.9f, mapa[field28][1], mapa[field28][2]-5.15f);
+            drawModel(piunB, modelShader, mapa[field29][0]-4.9f, mapa[field29][1], mapa[field29][2]-5.15f);
+            drawModel(piunB, modelShader, mapa[field30][0]-4.9f, mapa[field30][1], mapa[field30][2]-5.15f);
+            drawModel(piunB, modelShader, mapa[field31][0]-4.9f, mapa[field31][1], mapa[field31][2]-5.15f);
+            drawModel(piunB, modelShader, mapa[field32][0]-4.9f, mapa[field32][1], mapa[field32][2]-5.2f);
+            drawModel(piunB, modelShader, mapa[field24][0]-4.9f, mapa[field24][1], mapa[field24][2]-5.15f);
+            drawModel(piunB, modelShader, mapa[field19][0]-4.9f, mapa[field19][1], mapa[field19][2]-5.13f);
 
             glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
             skyShader.use();
@@ -1085,8 +822,6 @@ glm::vec3 cubePositions[] = {
             glBindVertexArray(0);
             glDepthFunc(GL_LESS);
 
-
-
             // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
             // -------------------------------------------------------------------------------
             glfwSwapBuffers(window);
@@ -1100,7 +835,6 @@ glm::vec3 cubePositions[] = {
         glDeleteVertexArrays(2, &boardVAO);
         glDeleteBuffers(2, &VBO2);
         glDeleteVertexArrays(1,&skyVAO);
-
 
         // glfw: terminate, clearing all previously allocated GLFW resources.
         // ------------------------------------------------------------------
@@ -1406,6 +1140,17 @@ unsigned int loadCubemap(vector<string> faces) {
 
 
     return textureID;
+}
+
+void drawModel (Model model1, Shader modelShader, float x, float y, float z){
+    glm::mat4 model = glm::mat4(1.0f);
+    model = glm::translate(model,glm::vec3(x, y, z)); // translate it down so it's at the center of the scene
+    model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
+    model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+    model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
+    model = glm::scale(model, glm::vec3(0.18f));    // it's a bit too big for our scene, so scale it down
+    modelShader.setMat4("model", model);
+    model1.Draw(modelShader);
 }
 
 
