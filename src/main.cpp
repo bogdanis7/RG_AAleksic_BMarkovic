@@ -732,6 +732,9 @@ glm::vec3 cubePositions[] = {
             drawModel(piunB, modelShader, mapa[field24][0]-4.9f, mapa[field24][1], mapa[field24][2]-5.15f);
             drawModel(piunB, modelShader, mapa[field19][0]-4.9f, mapa[field19][1], mapa[field19][2]-5.13f);
 
+            //drawModel(topA, modelShader, x, y, z);
+            //drawModel(topA, modelShader, x, y, z);
+
             glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
             skyShader.use();
             view = glm::mat4(glm::mat3(camera.GetViewMatrix())); // remove translation from the view matrix
