@@ -104,7 +104,10 @@ map<string,Figure*> mapafigurica; // mapa koja cuva gde je kada koja figura
 float deltaTime = 0.0f;    // time between current frame and last frame
 float lastFrame = 0.0f;
 
-glm::vec3 lightPos(0.5f, 6.0f, 3.0f);
+float x5=3.8f;
+float y5=6.0f;
+float z5=3.5f;
+glm::vec3 lightPos=glm::vec3(x5, y5, z5);
 glm::vec3 lightDir(-0.2f, -1.0f, -0.3f);
 
 glm::vec3 cubePositions[] = {
@@ -597,13 +600,17 @@ glm::vec3 cubePositions[] = {
             glDrawArrays(GL_TRIANGLES, 0, 6);
 
             //svetlo
+            //azuriramo poziciju
+            glm::vec3 lightPos=glm::vec3(x5, y5, z5);
+
+
             lightShader.use();
-            lightShader.setVec3("color", 0.7, 0.7, sin(glfwGetTime())/2.0+0.5);
+            lightShader.setVec3("color", 1.0f, 1.0f, 1.0f);
             lightShader.setMat4("projection", projection);
             lightShader.setMat4("view", view);
             model = glm::mat4(1.0f);
             model = glm::translate(model, lightPos);
-            model = glm::scale(model, glm::vec3(1.5f));
+            model = glm::scale(model, glm::vec3(1.0f));
             lightShader.setMat4("model", model);
 
             glBindVertexArray(lightVAO);
@@ -679,7 +686,8 @@ glm::vec3 cubePositions[] = {
             model = glm::mat4(1.0f);
             model = translate(model, glm::vec3(0.0f, -2.0f, -1.0f));
             model = scale(model, glm::vec3(8.0f, 2.0f, 6.0f));
-
+            //azuriramo
+            pointLight.position = lightPos;
             modelShader.use();
             modelShader.setVec3("pointLight.position",pointLight.position);
             modelShader.setVec3("pointLight.ambient",pointLight.ambient);
@@ -694,7 +702,7 @@ glm::vec3 cubePositions[] = {
             modelShader.setMat4("projection", projection);
             modelShader.setMat4("view", view);
 
-            pointLight.ambient = glm::vec3(1.0f, 1.0f, 1.0f);
+            pointLight.ambient = glm::vec3(1.2f, 1.2f, 1.2f);
             modelShader.setVec3("pointLight.ambient",pointLight.ambient);
 
             drawModel(topA,modelShader,mapa[field3][0]-5.8f,mapa[field3][1],mapa[field3][2]-5.4f);
@@ -974,6 +982,7 @@ void key_callback1(GLFWwindow* window, int key, int scancode, int action, int mo
                 mapafigurica[src] = nullptr;
             }
             ind = true;
+            x5=(-1)*x5;
         }
         if (key == GLFW_KEY_2 and action == GLFW_PRESS) {
             dest += "2";
@@ -984,6 +993,7 @@ void key_callback1(GLFWwindow* window, int key, int scancode, int action, int mo
                 mapafigurica[src] = nullptr;
             }
             ind = true;
+            x5=(-1)*x5;
         }
         if (key == GLFW_KEY_3 and action == GLFW_PRESS) {
             dest += "3";
@@ -994,6 +1004,7 @@ void key_callback1(GLFWwindow* window, int key, int scancode, int action, int mo
                 mapafigurica[src] = nullptr;
             }
             ind = true;
+            x5=(-1)*x5;
         }
         if (key == GLFW_KEY_4 and action == GLFW_PRESS) {
             dest += "4";
@@ -1004,6 +1015,7 @@ void key_callback1(GLFWwindow* window, int key, int scancode, int action, int mo
                 mapafigurica[src] = nullptr;
             }
             ind = true;
+            x5=-3.8;
         }
         if (key == GLFW_KEY_5 and action == GLFW_PRESS) {
             dest += "5";
@@ -1014,6 +1026,7 @@ void key_callback1(GLFWwindow* window, int key, int scancode, int action, int mo
                 mapafigurica[src] = nullptr;
             }
             ind = true;
+            x5=(-1)*x5;
         }
         if (key == GLFW_KEY_6 and action == GLFW_PRESS) {
             dest += "6";
@@ -1024,6 +1037,7 @@ void key_callback1(GLFWwindow* window, int key, int scancode, int action, int mo
                 mapafigurica[src] = nullptr;
             }
             ind = true;
+            x5=(-1)*x5;
         }
         if (key == GLFW_KEY_7 and action == GLFW_PRESS) {
             dest += "7";
@@ -1034,6 +1048,7 @@ void key_callback1(GLFWwindow* window, int key, int scancode, int action, int mo
                 mapafigurica[src] = nullptr;
             }
             ind = true;
+            x5=(-1)*x5;
         }
         if (key == GLFW_KEY_8 and action == GLFW_PRESS) {
             dest += "8";
@@ -1044,6 +1059,7 @@ void key_callback1(GLFWwindow* window, int key, int scancode, int action, int mo
                 mapafigurica[src] = nullptr;
             }
             ind = true;
+            x5=(-1)*x5;
         }
     }
 }
