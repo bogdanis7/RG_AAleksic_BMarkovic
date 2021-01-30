@@ -1,4 +1,4 @@
-# Install script for directory: /home/bogdanis/Desktop/3. godina/RG/RG_AAleksic_BMarkovic/libs/imgui
+# Install script for directory: /home/andri/Desktop/proj/RG_AAleksic_BMarkovic/libs/imgui
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

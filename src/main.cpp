@@ -104,7 +104,7 @@ map<string,Figure*> mapafigurica; // mapa koja cuva gde je kada koja figura
 float deltaTime = 0.0f;    // time between current frame and last frame
 float lastFrame = 0.0f;
 
-glm::vec3 lightPos(1.0f, 6.0f, 3.5f);
+glm::vec3 lightPos(0.5f, 6.0f, 3.0f);
 glm::vec3 lightDir(-0.2f, -1.0f, -0.3f);
 
 glm::vec3 cubePositions[] = {
@@ -343,14 +343,11 @@ glm::vec3 cubePositions[] = {
         Model kraljB(FileSystem::getPath("resources/objects/kraljb/12932_Wooden_Chess_King_Side_B_V2_l3.obj"));
         Model piunB(FileSystem::getPath("resources/objects/piunb/12937_Wooden_Chess_Pawn_Side_B_V2_L3.obj"));
 
-//        Model rock(FileSystem::getPath("resources/objects/rock/rock.obj"));
-//
-//        rock.SetShaderTextureNamePrefix("material.");
 
         PointLight pointLight;
         pointLight.ambient = glm::vec3(1.5, 1.5, 1.5);
-        pointLight.diffuse = glm::vec3(1.0f, 1.0f, 1.0f);
-        pointLight.specular = glm::vec3(0.5, 0.5, 0.5);
+        pointLight.diffuse = glm::vec3(0.7, 0.7, sin(glfwGetTime())/2.0+0.5);
+        pointLight.specular = glm::vec3(1.0, 1.0, 1.0);
         pointLight.constant = 1.0f;
         pointLight.linear = 0.06f;
         pointLight.quadratic = 0.012f;
@@ -483,7 +480,9 @@ glm::vec3 cubePositions[] = {
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
         glEnableVertexAttribArray(0);
 
-        //tabla
+
+        //tekstura za veliki kvadrat
+
         unsigned int VBO2, boardVAO;
         glGenVertexArrays(1, &boardVAO);
         glGenBuffers(1, &VBO2);
@@ -492,18 +491,16 @@ glm::vec3 cubePositions[] = {
         glBufferData(GL_ARRAY_BUFFER, sizeof(texture_vertices), texture_vertices, GL_STATIC_DRAW);
 
         glBindVertexArray(boardVAO);
-        //pozicija
+        // pozicija
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
         glEnableVertexAttribArray(0);
-        //normale
+        // normale
         glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
         glEnableVertexAttribArray(1);
         //tekstura
         glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8*sizeof(float), (void*)(6*sizeof(float)));
         glEnableVertexAttribArray(2);
 
-
-        //skybox
         unsigned int skyVAO, skyVBO;
         glGenVertexArrays(1, &skyVAO);
         glGenBuffers(1, &skyVBO);
@@ -525,6 +522,8 @@ glm::vec3 cubePositions[] = {
 
         unsigned int cubemapTexture =  loadCubemap(faces);
 
+        // load and create a texture
+        // -------------------------
 
         //tekstura za tablu
         unsigned int diffuseMap = loadTexture(FileSystem::getPath("resources/textures/chess4.png").c_str());
@@ -569,19 +568,20 @@ glm::vec3 cubePositions[] = {
             boardShader.setVec3("viewPos", camera.Position);
 
             boardShader.setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
-            boardShader.setVec3("light.diffuse", 0.4, 0.1, sin(glfwGetTime())/2.0+0.5);
+            boardShader.setVec3("light.diffuse", 0.7, 0.7, sin(glfwGetTime())/2.0+0.5);
             boardShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
 
-            boardShader.setVec3("material.specular", 0.2f, 0.2f, 0.2f);
-            boardShader.setFloat("material.shininess", 64.0f);
+            boardShader.setVec3("material.specular", 0.5f, 0.5f, 0.5f);
+            boardShader.setFloat("material.shininess", 32.0f);
 
             // create transformations
             glm::mat4 model = glm::mat4(1.0f);
 
-            glm::mat4 view = glm::mat4(1.0f);
+            glm::mat4 view = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
             glm::mat4 projection = glm::mat4(1.0f);
 
 
+            //ovde se salje globalna promenljiva fov koja se menja na scroll preko callbacka
             projection = glm::perspective(glm::radians(fov), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
             view = glm::lookAt(camera.Position, camera.Position+camera.Front, camera.Up);
 
@@ -599,7 +599,7 @@ glm::vec3 cubePositions[] = {
 
             //svetlo
             lightShader.use();
-            lightShader.setVec3("color", 1.0f, 1.0f, 1.0f);
+            lightShader.setVec3("color", 0.7, 0.7, sin(glfwGetTime())/2.0+0.5);
             lightShader.setMat4("projection", projection);
             lightShader.setMat4("view", view);
             model = glm::mat4(1.0f);
@@ -666,7 +666,11 @@ glm::vec3 cubePositions[] = {
                 model = glm::translate(model, cubePositions[i]);
                 float angle = 20.0f * i;
                 ourShader.setMat4("model", model);
-                ourShader.setVec3("color", 0.0f, 0.0f, 0.0f);
+                if (i % 2)
+                    ourShader.setVec3("color", 0.0f, 0.0f, 0.0f);
+                else
+                    ourShader.setVec3("color", 0.0f, 0.0f, 0.0f);
+
                 glDrawArrays(GL_TRIANGLES, 0, 36);
             }
 
@@ -690,6 +694,9 @@ glm::vec3 cubePositions[] = {
             modelShader.setFloat("material.shininess", 64.0f);
             modelShader.setMat4("projection", projection);
             modelShader.setMat4("view", view);
+
+            drawModel(topA,modelShader,mapa[field3][0]-5.8f,mapa[field3][1],mapa[field3][2]-5.4f);
+            drawModel(topA,modelShader,mapa[field5][0]-5.8f,mapa[field5][1],mapa[field5][2]-5.4f);
 
 
             drawModel(konjA, modelShader, mapa[field1][0], mapa[field1][1], mapa[field1][2]);
@@ -731,9 +738,6 @@ glm::vec3 cubePositions[] = {
             drawModel(piunB, modelShader, mapa[field32][0]-4.9f, mapa[field32][1], mapa[field32][2]-5.2f);
             drawModel(piunB, modelShader, mapa[field24][0]-4.9f, mapa[field24][1], mapa[field24][2]-5.15f);
             drawModel(piunB, modelShader, mapa[field19][0]-4.9f, mapa[field19][1], mapa[field19][2]-5.13f);
-
-            //drawModel(topA, modelShader, x, y, z);
-            //drawModel(topA, modelShader, x, y, z);
 
             glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
             skyShader.use();
@@ -1073,12 +1077,9 @@ unsigned int loadCubemap(vector<string> faces) {
 void drawModel (Model model1, Shader modelShader, float x, float y, float z){
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::translate(model,glm::vec3(x, y, z)); // translate it down so it's at the center of the scene
-
     model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, -1.0f, 0.0f));
-//   model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 0.0f, 0.0000001f));
     model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-  model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
-
+    model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
     model = glm::scale(model, glm::vec3(0.18f));    // it's a bit too big for our scene, so scale it down
     modelShader.setMat4("model", model);
     model1.Draw(modelShader);
