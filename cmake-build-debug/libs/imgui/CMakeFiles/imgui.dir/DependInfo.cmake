@@ -4,13 +4,13 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/andri/Desktop/proj/RG_AAleksic_BMarkovic/libs/imgui/src/imgui.cpp" "/home/andri/Desktop/proj/RG_AAleksic_BMarkovic/cmake-build-debug/libs/imgui/CMakeFiles/imgui.dir/src/imgui.cpp.o"
-  "/home/andri/Desktop/proj/RG_AAleksic_BMarkovic/libs/imgui/src/imgui_demo.cpp" "/home/andri/Desktop/proj/RG_AAleksic_BMarkovic/cmake-build-debug/libs/imgui/CMakeFiles/imgui.dir/src/imgui_demo.cpp.o"
-  "/home/andri/Desktop/proj/RG_AAleksic_BMarkovic/libs/imgui/src/imgui_draw.cpp" "/home/andri/Desktop/proj/RG_AAleksic_BMarkovic/cmake-build-debug/libs/imgui/CMakeFiles/imgui.dir/src/imgui_draw.cpp.o"
-  "/home/andri/Desktop/proj/RG_AAleksic_BMarkovic/libs/imgui/src/imgui_impl_glfw.cpp" "/home/andri/Desktop/proj/RG_AAleksic_BMarkovic/cmake-build-debug/libs/imgui/CMakeFiles/imgui.dir/src/imgui_impl_glfw.cpp.o"
-  "/home/andri/Desktop/proj/RG_AAleksic_BMarkovic/libs/imgui/src/imgui_impl_opengl3.cpp" "/home/andri/Desktop/proj/RG_AAleksic_BMarkovic/cmake-build-debug/libs/imgui/CMakeFiles/imgui.dir/src/imgui_impl_opengl3.cpp.o"
-  "/home/andri/Desktop/proj/RG_AAleksic_BMarkovic/libs/imgui/src/imgui_tables.cpp" "/home/andri/Desktop/proj/RG_AAleksic_BMarkovic/cmake-build-debug/libs/imgui/CMakeFiles/imgui.dir/src/imgui_tables.cpp.o"
-  "/home/andri/Desktop/proj/RG_AAleksic_BMarkovic/libs/imgui/src/imgui_widgets.cpp" "/home/andri/Desktop/proj/RG_AAleksic_BMarkovic/cmake-build-debug/libs/imgui/CMakeFiles/imgui.dir/src/imgui_widgets.cpp.o"
+  "/home/bogdanis/Desktop/3. godina/RG/RG_AAleksic_BMarkovic/libs/imgui/src/imgui.cpp" "/home/bogdanis/Desktop/3. godina/RG/RG_AAleksic_BMarkovic/cmake-build-debug/libs/imgui/CMakeFiles/imgui.dir/src/imgui.cpp.o"
+  "/home/bogdanis/Desktop/3. godina/RG/RG_AAleksic_BMarkovic/libs/imgui/src/imgui_demo.cpp" "/home/bogdanis/Desktop/3. godina/RG/RG_AAleksic_BMarkovic/cmake-build-debug/libs/imgui/CMakeFiles/imgui.dir/src/imgui_demo.cpp.o"
+  "/home/bogdanis/Desktop/3. godina/RG/RG_AAleksic_BMarkovic/libs/imgui/src/imgui_draw.cpp" "/home/bogdanis/Desktop/3. godina/RG/RG_AAleksic_BMarkovic/cmake-build-debug/libs/imgui/CMakeFiles/imgui.dir/src/imgui_draw.cpp.o"
+  "/home/bogdanis/Desktop/3. godina/RG/RG_AAleksic_BMarkovic/libs/imgui/src/imgui_impl_glfw.cpp" "/home/bogdanis/Desktop/3. godina/RG/RG_AAleksic_BMarkovic/cmake-build-debug/libs/imgui/CMakeFiles/imgui.dir/src/imgui_impl_glfw.cpp.o"
+  "/home/bogdanis/Desktop/3. godina/RG/RG_AAleksic_BMarkovic/libs/imgui/src/imgui_impl_opengl3.cpp" "/home/bogdanis/Desktop/3. godina/RG/RG_AAleksic_BMarkovic/cmake-build-debug/libs/imgui/CMakeFiles/imgui.dir/src/imgui_impl_opengl3.cpp.o"
+  "/home/bogdanis/Desktop/3. godina/RG/RG_AAleksic_BMarkovic/libs/imgui/src/imgui_tables.cpp" "/home/bogdanis/Desktop/3. godina/RG/RG_AAleksic_BMarkovic/cmake-build-debug/libs/imgui/CMakeFiles/imgui.dir/src/imgui_tables.cpp.o"
+  "/home/bogdanis/Desktop/3. godina/RG/RG_AAleksic_BMarkovic/libs/imgui/src/imgui_widgets.cpp" "/home/bogdanis/Desktop/3. godina/RG/RG_AAleksic_BMarkovic/cmake-build-debug/libs/imgui/CMakeFiles/imgui.dir/src/imgui_widgets.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 
@@ -27,7 +27,7 @@ set(CMAKE_CXX_TARGET_INCLUDE_PATH
 
 # Targets to which this target links.
 set(CMAKE_TARGET_LINKED_INFO_FILES
-  "/home/andri/Desktop/proj/RG_AAleksic_BMarkovic/cmake-build-debug/libs/glad/CMakeFiles/glad.dir/DependInfo.cmake"
+  "/home/bogdanis/Desktop/3. godina/RG/RG_AAleksic_BMarkovic/cmake-build-debug/libs/glad/CMakeFiles/glad.dir/DependInfo.cmake"
   )
 
 # Fortran module output directory.

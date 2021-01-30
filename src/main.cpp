@@ -345,9 +345,9 @@ glm::vec3 cubePositions[] = {
 
 
         PointLight pointLight;
-        pointLight.ambient = glm::vec3(1.5, 1.5, 1.5);
-        pointLight.diffuse = glm::vec3(0.7, 0.7, sin(glfwGetTime())/2.0+0.5);
-        pointLight.specular = glm::vec3(1.0, 1.0, 1.0);
+        pointLight.ambient = glm::vec3(1.7f, 1.7f, 1.7f);
+        pointLight.diffuse = glm::vec3(1.0f, 1.0f, 1.0f);
+        pointLight.specular = glm::vec3(0.5f, 0.5f, 0.5f);
         pointLight.constant = 1.0f;
         pointLight.linear = 0.06f;
         pointLight.quadratic = 0.012f;
@@ -382,7 +382,6 @@ glm::vec3 cubePositions[] = {
                 0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
                 0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
                 0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
-
 
                 -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
                 0.5f, -0.5f, -0.5f, 1.0f, 1.0f,
@@ -568,11 +567,11 @@ glm::vec3 cubePositions[] = {
             boardShader.setVec3("viewPos", camera.Position);
 
             boardShader.setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
-            boardShader.setVec3("light.diffuse", 0.7, 0.7, sin(glfwGetTime())/2.0+0.5);
+            boardShader.setVec3("light.diffuse", 0.7, 0.2, sin(glfwGetTime())/2.0+0.5);
             boardShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
 
-            boardShader.setVec3("material.specular", 0.5f, 0.5f, 0.5f);
-            boardShader.setFloat("material.shininess", 32.0f);
+            boardShader.setVec3("material.specular", 0.3f, 0.3f, 0.3f);
+            boardShader.setFloat("material.shininess", 64.0f);
 
             // create transformations
             glm::mat4 model = glm::mat4(1.0f);
@@ -695,6 +694,9 @@ glm::vec3 cubePositions[] = {
             modelShader.setMat4("projection", projection);
             modelShader.setMat4("view", view);
 
+            pointLight.ambient = glm::vec3(1.0f, 1.0f, 1.0f);
+            modelShader.setVec3("pointLight.ambient",pointLight.ambient);
+
             drawModel(topA,modelShader,mapa[field3][0]-5.8f,mapa[field3][1],mapa[field3][2]-5.4f);
             drawModel(topA,modelShader,mapa[field5][0]-5.8f,mapa[field5][1],mapa[field5][2]-5.4f);
 
@@ -717,6 +719,9 @@ glm::vec3 cubePositions[] = {
             drawModel(kraljicaA, modelShader, mapa[field6][0], mapa[field6][1], mapa[field6][2]-1.7f);
 
             drawModel(kraljA, modelShader, mapa[field7][0], mapa[field7][1], mapa[field7][2]-2.5f);
+
+            pointLight.ambient = glm::vec3(2.0f, 2.0f, 2.0f);
+            modelShader.setVec3("pointLight.ambient",pointLight.ambient);
             drawModel(kraljB, modelShader, mapa[field17][0]-5.9f, mapa[field17][1], mapa[field17][2]-2.6f);
 
             drawModel(kraljicaB, modelShader, mapa[field18][0]-5.9f, mapa[field18][1], mapa[field18][2]-1.8f);
