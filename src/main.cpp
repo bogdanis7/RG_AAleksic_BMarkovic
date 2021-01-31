@@ -401,16 +401,18 @@ glm::vec3 cubePositions[] = {
                 -0.5f, 0.5f, -0.5f, 0.0f, 1.0f//E
 
         };
-        // world space positions of our cubes
 
         float texture_vertices[] = {
                 //pozicije            //normale            //koordinate teksture
                 -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
                 0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  0.0f,
                 0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
-                0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
                 -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  1.0f,
-                -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
+        };
+
+        unsigned int indices[] {
+            0, 1, 2,
+            0, 2, 3
         };
 
         float skyVertices[] = {
@@ -485,14 +487,20 @@ glm::vec3 cubePositions[] = {
 
         //tekstura za veliki kvadrat
 
-        unsigned int VBO2, boardVAO;
+        unsigned int VBO2, boardVAO, EBO;
         glGenVertexArrays(1, &boardVAO);
         glGenBuffers(1, &VBO2);
+        glGenBuffers(1, &EBO);
+
+        glBindVertexArray(boardVAO);
 
         glBindBuffer(GL_ARRAY_BUFFER, VBO2);
         glBufferData(GL_ARRAY_BUFFER, sizeof(texture_vertices), texture_vertices, GL_STATIC_DRAW);
 
-        glBindVertexArray(boardVAO);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+
         // pozicija
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
         glEnableVertexAttribArray(0);
@@ -597,7 +605,7 @@ glm::vec3 cubePositions[] = {
             boardShader.setMat4("model", model);
 
             glBindVertexArray(boardVAO);
-            glDrawArrays(GL_TRIANGLES, 0, 6);
+            glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
             //svetlo
             //azuriramo poziciju
@@ -698,7 +706,7 @@ glm::vec3 cubePositions[] = {
             modelShader.setFloat("pointLight.quadratic",pointLight.quadratic);
 
             modelShader.setVec3("viewPosition", camera.Position);
-            modelShader.setFloat("material.shininess", 64.0f);
+            modelShader.setFloat("material.shininess", 32.0f);
             modelShader.setMat4("projection", projection);
             modelShader.setMat4("view", view);
 
@@ -780,6 +788,7 @@ glm::vec3 cubePositions[] = {
         glDeleteVertexArrays(2, &boardVAO);
         glDeleteBuffers(2, &VBO2);
         glDeleteVertexArrays(1,&skyVAO);
+        glDeleteBuffers(1, &EBO);
 
         // glfw: terminate, clearing all previously allocated GLFW resources.
         // ------------------------------------------------------------------
