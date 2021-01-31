@@ -769,9 +769,9 @@ glm::vec3 cubePositions[] = {
             drawModel(kraljicaB, modelShader, mapa[field18][0]-5.9f, mapa[field18][1], mapa[field18][2]-1.8f);
 
             if(f20->getdraw()==true)
-            drawModelH(konjB, modelShader, mapa[field20][0], mapa[field20][1], mapa[field20][2]);
+            drawModelH(konjB, modelShader, mapa[field20][0]-0.18f, mapa[field20][1], mapa[field20][2]);
             if(f21->getdraw() == true)
-            drawModelH(konjB, modelShader, mapa[field21][0], mapa[field21][1], mapa[field21][2]);
+            drawModelH(konjB, modelShader, mapa[field21][0]-0.18f, mapa[field21][1], mapa[field21][2]);
 
             if(f22->getdraw()==true)
             drawModel(lovacB, modelShader, mapa[field22][0]-5.9f, mapa[field22][1], mapa[field22][2]-3.5f);
