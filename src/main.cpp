@@ -3,7 +3,6 @@
 #include <stb_image.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
 #include <vector>
 #include <string>
 #include <learnopengl/filesystem.h>
@@ -29,8 +28,10 @@ const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
 //inicijalizacija
-
+bool stop_drawing(string field);
 void drawModel(Model model1, Shader modelShader, float x, float y, float z);
+void drawModelH(Model model1, Shader modelShader, float x, float y, float z);
+
 unsigned int loadTexture(char const * path);
 
 unsigned int loadCubemap(vector<string> vector);
@@ -83,10 +84,7 @@ struct PointLight {
 
 
 vector<int> translate_ind;
-// camera
-//glm::vec3 cameraPos = glm::vec3(0.0f, 5.0f, 10.0f);
-//glm::vec3 cameraFront = glm::vec3(0.0f, 1.0f, -3.0f);
-//glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+map<Figure *,bool> draw_ind;
 
 Camera camera(glm::vec3(0.5f, 3.0f, 16.0f));
 
@@ -192,9 +190,15 @@ glm::vec3 cubePositions[] = {
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-        //MORA DA SE PRAVI ZA SVAKU FIGURU POSEBNO OVA MAPA JER SVE IMAJU RAZLICIT
-        //koord pocetak -- ovo je za konja igraca A
+
+       //pravimo mapu za jendu figuru pa u odnosu na nju namestamo ostale -
+       // kako ne bismo pravili za svaku figuru novu mapu - lakse ovako
+
         vector<char> s = {'A','B','C','D','E','F','G','H'};
+
+
+
+
         string pom = "";
         vector<float> vec(3);
         vector<string> niska;
@@ -207,7 +211,7 @@ glm::vec3 cubePositions[] = {
             z = j;
             j--;
             x = 0;
-            for(float i = 1 ; i <= 8; i++){
+            for(float i = 1 ; i <= 9; i++){
                 x = 8-i ;
 
                 vec = {x,y,z};
@@ -220,38 +224,40 @@ glm::vec3 cubePositions[] = {
             }
         }
 
-        f = new Figure("B1");
-        f2 = new Figure("G1");
-        f3 = new Figure("H1");
-        f4 = new Figure("C1");
-        f5 = new Figure("A1");
-        f6 = new Figure("D1");
-        f7 = new Figure("E1");
-        f8 = new Figure("F1");
-        f9 = new Figure("A2");
-        f10 = new Figure("B2");
-        f11 = new Figure("C2");
-        f12 = new Figure("D2");
-        f13 = new Figure("E2");
-        f14 = new Figure("F2");
-        f15 = new Figure("G2");
-        f16 = new Figure("H2");
-        f17 = new Figure("E8");
-        f18= new Figure("D8");
-        f19= new Figure("A7");
-        f20= new Figure("B8");
-        f21= new Figure("G8");
-        f22= new Figure("F8");
-        f23= new Figure("C8");
-        f24= new Figure("B7");
-        f25= new Figure("A8");
-        f26 = new Figure("H8");
-        f27 = new Figure("H7");
-        f28 = new Figure("G7");
-        f29 = new Figure("F7");
-        f30 = new Figure("E7");
-        f31 = new Figure("D7");
-        f32 = new Figure("C7");
+        // postavljamo figure na njihova mesta kao na pocetku igre
+
+        f = new Figure("B1",true);
+        f2 = new Figure("G1", true);
+        f3 = new Figure("H1", true);
+        f4 = new Figure("C1",true);
+        f5 = new Figure("A1", true);
+        f6 = new Figure("D1", true);
+        f7 = new Figure("E1", true);
+        f8 = new Figure("F1", true);
+        f9 = new Figure("A2", true);
+        f10 = new Figure("B2", true);
+        f11 = new Figure("C2", true);
+        f12 = new Figure("D2", true);
+        f13 = new Figure("E2", true);
+        f14 = new Figure("F2", true);
+        f15 = new Figure("G2", true);
+        f16 = new Figure("H2", true);
+        f17 = new Figure("E8", true);
+        f18= new Figure("D8", true);
+        f19= new Figure("A7", true);
+        f20= new Figure("B8", true);
+        f21= new Figure("G8", true);
+        f22= new Figure("F8", true);
+        f23= new Figure("C8", true);
+        f24= new Figure("B7", true);
+        f25= new Figure("A8", true);
+        f26 = new Figure("H8", true);
+        f27 = new Figure("H7", true);
+        f28 = new Figure("G7", true);
+        f29 = new Figure("F7", true);
+        f30 = new Figure("E7", true);
+        f31 = new Figure("D7", true);
+        f32 = new Figure("C7", true);
 
 
 
@@ -324,15 +330,14 @@ glm::vec3 cubePositions[] = {
         //dozvolimo odsecanje stranica
         glEnable(GL_CULL_FACE);
         glCullFace(GL_BACK);
-        // stbi_set_flip_vertically_on_load(true);
         // build and compile our shader zprogram
         //tekstura i svetlo
         Shader skyShader("resources/shaders/skybox.vs","resources/shaders/skybox.fs");
         Shader boardShader("resources/shaders/board.vs", "resources/shaders/board.fs");
         Shader lightShader("resources/shaders/light.vs", "resources/shaders/light.fs");
         Shader modelShader("resources/shaders/model.vs", "resources/shaders/model.fs");
-        // ------------------------------------
         Shader ourShader("resources/shaders/field.vs", "resources/shaders/field.fs");
+
         Model konjA(FileSystem::getPath("resources/objects/WoodenChess/12930_WoodenChessKnightSideA_v1_l3.obj"));
         Model lovacA(FileSystem::getPath("resources/objects/WoodenChessBishopSideA/WoodenChessBishop.obj"));
         Model piunA(FileSystem::getPath("resources/objects/WoodenChessPawnSideA/12931_WoodenChessPawnSideA_v1_l3.obj"));
@@ -412,7 +417,7 @@ glm::vec3 cubePositions[] = {
                 -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  1.0f,
                 -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
         };
-
+        // za skybox
         float skyVertices[] = {
                 // positions
                 -1.0f,  1.0f, -1.0f,
@@ -458,7 +463,7 @@ glm::vec3 cubePositions[] = {
                 1.0f, -1.0f,  1.0f
         };
 
-
+        // VBO  I VAO ZA POLJA
         unsigned int VBO1, fieldsVAO;
         glGenVertexArrays(1, &fieldsVAO);
         glGenBuffers(1, &VBO1);
@@ -474,6 +479,8 @@ glm::vec3 cubePositions[] = {
         // texture coord attribute
         glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *) (3 * sizeof(float)));
         glEnableVertexAttribArray(1);
+
+        // za svetla VAO I VBO
 
         unsigned int lightVAO;
         glGenVertexArrays(1, &lightVAO);
@@ -511,7 +518,7 @@ glm::vec3 cubePositions[] = {
         glBufferData(GL_ARRAY_BUFFER, sizeof(skyVertices), &skyVertices, GL_STATIC_DRAW);
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-
+        //UCITAVANJE SLIKA ZA SKYBOX
         vector<std::string> faces
                 {
                         FileSystem::getPath("resources/textures/PiazzaDelPopolo1/posx.jpg"),
@@ -530,8 +537,10 @@ glm::vec3 cubePositions[] = {
         //tekstura za tablu
         unsigned int diffuseMap = loadTexture(FileSystem::getPath("resources/textures/chess4.png").c_str());
 
+        unsigned int specularmap = loadTexture(FileSystem::getPath("resources/textures/chess4-ConvertImage.png").c_str());
         boardShader.use();
         boardShader.setInt("material.diffuse", 0);
+        boardShader.setInt("material.specular", 1);
 
         //tekstura za podlogu
         unsigned int texture2 = loadTexture(FileSystem::getPath("resources/textures/826a531ab12e32b4a908d516a5ae4ffd.jpeg").c_str());
@@ -560,10 +569,13 @@ glm::vec3 cubePositions[] = {
             glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+            boardShader.use();
             //aktiviranje shadera za veliki kvadrat
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, diffuseMap);
-            boardShader.use();
+            glActiveTexture(GL_TEXTURE1);
+            glBindTexture(GL_TEXTURE_2D,specularmap);
+
 
 
             boardShader.setVec3("light.direction", lightDir);
@@ -573,8 +585,8 @@ glm::vec3 cubePositions[] = {
             boardShader.setVec3("light.diffuse", 0.7, 0.2, sin(glfwGetTime())/2.0+0.5);
             boardShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
 
-            boardShader.setVec3("material.specular", 0.3f, 0.3f, 0.3f);
-            boardShader.setFloat("material.shininess", 64.0f);
+
+            boardShader.setFloat("material.shininess", 256.0f);
 
             // create transformations
             glm::mat4 model = glm::mat4(1.0f);
@@ -618,6 +630,9 @@ glm::vec3 cubePositions[] = {
 
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, texture2);
+
+
+
             // activate shader
             ourShader.use();
 
@@ -689,6 +704,96 @@ glm::vec3 cubePositions[] = {
             //azuriramo
             pointLight.position = lightPos;
             modelShader.use();
+
+
+            modelShader.setVec3("viewPosition", camera.Position);
+            modelShader.setFloat("material.shininess", 64.0f);
+            modelShader.setMat4("projection", projection);
+            modelShader.setMat4("view", view);
+
+
+
+            if(f3->getdraw() == true)
+                drawModel(topA,modelShader,mapa[field3][0]-5.8f,mapa[field3][1],mapa[field3][2]-5.4f);
+            if(f5->getdraw() == true)
+                drawModel(topA,modelShader,mapa[field5][0]-5.8f,mapa[field5][1],mapa[field5][2]-5.4f);
+
+            if(f->getdraw() == true)
+            drawModelH(konjA, modelShader, mapa[field1][0]-5.8f, mapa[field1][1], mapa[field1][2]-4.5f);
+            if(f2->getdraw() == true)
+            drawModelH(konjA, modelShader, mapa[field2][0]-5.8f, mapa[field2][1], mapa[field2][2]-4.5f);
+
+            if(f4->getdraw() == true)
+            drawModel(lovacA, modelShader, mapa[field4][0]-0.02f, mapa[field4][1], mapa[field4][2]-0.9f);
+            if(f8->getdraw() == true)
+            drawModel(lovacA, modelShader, mapa[field8][0]-0.02f, mapa[field8][1], mapa[field8][2]-0.9f);
+
+            if(f16->getdraw() == true)
+            drawModel(piunA, modelShader, mapa[field16][0]-0.9, mapa[field16][1], mapa[field16][2]+0.9f);
+            if(f9->getdraw() == true)
+            drawModel(piunA, modelShader, mapa[field9][0]-0.9, mapa[field9][1], mapa[field9][2]+0.9f);
+            if(f10->getdraw() == true)
+            drawModel(piunA, modelShader, mapa[field10][0]-0.9, mapa[field10][1], mapa[field10][2]+0.9f);
+            if(f11->getdraw() == true)
+            drawModel(piunA, modelShader, mapa[field11][0]-0.9, mapa[field11][1], mapa[field11][2]+0.9f);
+            if(f12->getdraw() == true)
+            drawModel(piunA, modelShader, mapa[field12][0]-0.9, mapa[field12][1], mapa[field12][2]+0.9f);
+            if(f13->getdraw() == true)
+            drawModel(piunA, modelShader, mapa[field13][0]-0.9, mapa[field13][1], mapa[field13][2]+0.9f);
+            if(f14->getdraw() == true)
+            drawModel(piunA, modelShader, mapa[field14][0]-0.9, mapa[field14][1], mapa[field14][2]+0.9f);
+            if(f15->getdraw() == true)
+            drawModel(piunA, modelShader, mapa[field15][0]-0.9, mapa[field15][1], mapa[field15][2]+0.9f);
+
+            if(f16->getdraw() == true)
+            drawModel(kraljicaA, modelShader, mapa[field6][0], mapa[field6][1], mapa[field6][2]-1.7f);
+
+            if(f7->getdraw() == true)
+            drawModel(kraljA, modelShader, mapa[field7][0], mapa[field7][1], mapa[field7][2]-2.5f);
+
+            pointLight.ambient = glm::vec3(2.0f, 2.0f, 2.0f);
+            modelShader.setVec3("pointLight.ambient",pointLight.ambient);
+
+            if(f17->getdraw()== true)
+            drawModel(kraljB, modelShader, mapa[field17][0]-5.9f, mapa[field17][1], mapa[field17][2]-2.6f);
+
+            if(f18->getdraw()==true)
+            drawModel(kraljicaB, modelShader, mapa[field18][0]-5.9f, mapa[field18][1], mapa[field18][2]-1.8f);
+
+            if(f20->getdraw()==true)
+            drawModelH(konjB, modelShader, mapa[field20][0], mapa[field20][1], mapa[field20][2]);
+            if(f21->getdraw() == true)
+            drawModelH(konjB, modelShader, mapa[field21][0], mapa[field21][1], mapa[field21][2]);
+
+            if(f22->getdraw()==true)
+            drawModel(lovacB, modelShader, mapa[field22][0]-5.9f, mapa[field22][1], mapa[field22][2]-3.5f);
+            if(f23->getdraw()==true)
+            drawModel(lovacB, modelShader, mapa[field23][0]-5.9f, mapa[field23][1], mapa[field23][2]-3.5f);
+
+            if(f25->getdraw()==true)
+            drawModel(topB, modelShader, mapa[field25][0]-5.9f, mapa[field25][1], mapa[field25][2]-5.3f);
+            if(f26->getdraw()== true)
+            drawModel(topB, modelShader, mapa[field26][0]-5.9f, mapa[field26][1], mapa[field26][2]-5.3f);
+
+            if(f27->getdraw()==true)
+            drawModel(piunB, modelShader, mapa[field27][0]-4.9f, mapa[field27][1], mapa[field27][2]-5.15f);
+            if(f28->getdraw()==true)
+            drawModel(piunB, modelShader, mapa[field28][0]-4.9f, mapa[field28][1], mapa[field28][2]-5.15f);
+            if(f29->getdraw()==true)
+            drawModel(piunB, modelShader, mapa[field29][0]-4.9f, mapa[field29][1], mapa[field29][2]-5.15f);
+            if(f30->getdraw()==true)
+            drawModel(piunB, modelShader, mapa[field30][0]-4.9f, mapa[field30][1], mapa[field30][2]-5.15f);
+            if(f31->getdraw() == true)
+            drawModel(piunB, modelShader, mapa[field31][0]-4.9f, mapa[field31][1], mapa[field31][2]-5.15f);
+            if(f32->getdraw() == true)
+            drawModel(piunB, modelShader, mapa[field32][0]-4.9f, mapa[field32][1], mapa[field32][2]-5.2f);
+            if(f24->getdraw()== true)
+            drawModel(piunB, modelShader, mapa[field24][0]-4.9f, mapa[field24][1], mapa[field24][2]-5.15f);
+            if(f19->getdraw() == true)
+            drawModel(piunB, modelShader, mapa[field19][0]-4.9f, mapa[field19][1], mapa[field19][2]-5.13f);
+
+            pointLight.ambient = glm::vec3(1.2f, 1.2f, 1.2f);
+            modelShader.setVec3("pointLight.ambient",pointLight.ambient);
             modelShader.setVec3("pointLight.position",pointLight.position);
             modelShader.setVec3("pointLight.ambient",pointLight.ambient);
             modelShader.setVec3("pointLight.diffuse",pointLight.diffuse);
@@ -696,62 +801,6 @@ glm::vec3 cubePositions[] = {
             modelShader.setFloat("pointLight.constant",pointLight.constant);
             modelShader.setFloat("pointLight.linear",pointLight.linear);
             modelShader.setFloat("pointLight.quadratic",pointLight.quadratic);
-
-            modelShader.setVec3("viewPosition", camera.Position);
-            modelShader.setFloat("material.shininess", 64.0f);
-            modelShader.setMat4("projection", projection);
-            modelShader.setMat4("view", view);
-
-            pointLight.ambient = glm::vec3(1.2f, 1.2f, 1.2f);
-            modelShader.setVec3("pointLight.ambient",pointLight.ambient);
-
-            drawModel(topA,modelShader,mapa[field3][0]-5.8f,mapa[field3][1],mapa[field3][2]-5.4f);
-            drawModel(topA,modelShader,mapa[field5][0]-5.8f,mapa[field5][1],mapa[field5][2]-5.4f);
-
-
-            drawModel(konjA, modelShader, mapa[field1][0], mapa[field1][1], mapa[field1][2]);
-            drawModel(konjA, modelShader, mapa[field2][0], mapa[field2][1], mapa[field2][2]);
-
-            drawModel(lovacA, modelShader, mapa[field4][0]-0.02f, mapa[field4][1], mapa[field4][2]-0.9f);
-            drawModel(lovacA, modelShader, mapa[field8][0]-0.02f, mapa[field8][1], mapa[field8][2]-0.9f);
-
-            drawModel(piunA, modelShader, mapa[field16][0]-0.9, mapa[field16][1], mapa[field16][2]+0.9f);
-            drawModel(piunA, modelShader, mapa[field9][0]-0.9, mapa[field9][1], mapa[field9][2]+0.9f);
-            drawModel(piunA, modelShader, mapa[field10][0]-0.9, mapa[field10][1], mapa[field10][2]+0.9f);
-            drawModel(piunA, modelShader, mapa[field11][0]-0.9, mapa[field11][1], mapa[field11][2]+0.9f);
-            drawModel(piunA, modelShader, mapa[field12][0]-0.9, mapa[field12][1], mapa[field12][2]+0.9f);
-            drawModel(piunA, modelShader, mapa[field13][0]-0.9, mapa[field13][1], mapa[field13][2]+0.9f);
-            drawModel(piunA, modelShader, mapa[field14][0]-0.9, mapa[field14][1], mapa[field14][2]+0.9f);
-            drawModel(piunA, modelShader, mapa[field15][0]-0.9, mapa[field15][1], mapa[field15][2]+0.9f);
-
-            drawModel(kraljicaA, modelShader, mapa[field6][0], mapa[field6][1], mapa[field6][2]-1.7f);
-
-            drawModel(kraljA, modelShader, mapa[field7][0], mapa[field7][1], mapa[field7][2]-2.5f);
-
-            pointLight.ambient = glm::vec3(2.0f, 2.0f, 2.0f);
-            modelShader.setVec3("pointLight.ambient",pointLight.ambient);
-            drawModel(kraljB, modelShader, mapa[field17][0]-5.9f, mapa[field17][1], mapa[field17][2]-2.6f);
-
-            drawModel(kraljicaB, modelShader, mapa[field18][0]-5.9f, mapa[field18][1], mapa[field18][2]-1.8f);
-
-            drawModel(konjB, modelShader, mapa[field20][0]-5.85f, mapa[field20][1], mapa[field20][2]-4.4f);
-            drawModel(konjB, modelShader, mapa[field21][0]-5.85f, mapa[field21][1], mapa[field21][2]-4.4f);
-
-            drawModel(lovacB, modelShader, mapa[field22][0]-5.9f, mapa[field22][1], mapa[field22][2]-3.5f);
-            drawModel(lovacB, modelShader, mapa[field23][0]-5.9f, mapa[field23][1], mapa[field23][2]-3.5f);
-
-            drawModel(topB, modelShader, mapa[field25][0]-5.9f, mapa[field25][1], mapa[field25][2]-5.3f);
-            drawModel(topB, modelShader, mapa[field26][0]-5.9f, mapa[field26][1], mapa[field26][2]-5.3f);
-
-            drawModel(piunB, modelShader, mapa[field27][0]-4.9f, mapa[field27][1], mapa[field27][2]-5.15f);
-            drawModel(piunB, modelShader, mapa[field28][0]-4.9f, mapa[field28][1], mapa[field28][2]-5.15f);
-            drawModel(piunB, modelShader, mapa[field29][0]-4.9f, mapa[field29][1], mapa[field29][2]-5.15f);
-            drawModel(piunB, modelShader, mapa[field30][0]-4.9f, mapa[field30][1], mapa[field30][2]-5.15f);
-            drawModel(piunB, modelShader, mapa[field31][0]-4.9f, mapa[field31][1], mapa[field31][2]-5.15f);
-            drawModel(piunB, modelShader, mapa[field32][0]-4.9f, mapa[field32][1], mapa[field32][2]-5.2f);
-            drawModel(piunB, modelShader, mapa[field24][0]-4.9f, mapa[field24][1], mapa[field24][2]-5.15f);
-            drawModel(piunB, modelShader, mapa[field19][0]-4.9f, mapa[field19][1], mapa[field19][2]-5.13f);
-
             glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
             skyShader.use();
             view = glm::mat4(glm::mat3(camera.GetViewMatrix())); // remove translation from the view matrix
@@ -794,7 +843,7 @@ glm::vec3 cubePositions[] = {
             glfwSetWindowShouldClose(window, true);
 
 
-        float cameraSpeed = 2.5 * deltaTime;
+        float cameraSpeed = 2.0 * deltaTime;
         if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
             camera.Position += cameraSpeed * camera.Front;
         if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
@@ -859,7 +908,6 @@ glm::vec3 cubePositions[] = {
             double xpos, ypos;
             //getting cursor position
             glfwGetCursorPos(window, &xpos, &ypos);
-            cout << "Cursor Position at (" << xpos << " : " << ypos << endl;
         }
     }
 
@@ -976,6 +1024,9 @@ void key_callback1(GLFWwindow* window, int key, int scancode, int action, int mo
         if (key == GLFW_KEY_1 and action == GLFW_PRESS) {
             dest += "1";
             std::cout << dest << std::endl;
+            if(stop_drawing(dest)){
+                mapafigurica[dest]->setdraw(false);
+            }
             if(mapafigurica[src] != nullptr){
                 mapafigurica[src]->setField(dest);
                 mapafigurica[dest] = mapafigurica[src];
@@ -987,6 +1038,9 @@ void key_callback1(GLFWwindow* window, int key, int scancode, int action, int mo
         if (key == GLFW_KEY_2 and action == GLFW_PRESS) {
             dest += "2";
             std::cout << dest << std::endl;
+            if(stop_drawing(dest)){
+                mapafigurica[dest]->setdraw(false);
+            }
             if(mapafigurica[src] != nullptr){
                 mapafigurica[src]->setField(dest);
                 mapafigurica[dest] = mapafigurica[src];
@@ -998,7 +1052,10 @@ void key_callback1(GLFWwindow* window, int key, int scancode, int action, int mo
         if (key == GLFW_KEY_3 and action == GLFW_PRESS) {
             dest += "3";
             std::cout << dest << std::endl;
-            if(mapafigurica[src] != nullptr){
+            if(stop_drawing(dest)){
+                mapafigurica[dest]->setdraw(false);
+            }
+             if(mapafigurica[src] != nullptr){
                 mapafigurica[src]->setField(dest);
                 mapafigurica[dest] = mapafigurica[src];
                 mapafigurica[src] = nullptr;
@@ -1009,6 +1066,9 @@ void key_callback1(GLFWwindow* window, int key, int scancode, int action, int mo
         if (key == GLFW_KEY_4 and action == GLFW_PRESS) {
             dest += "4";
             std::cout << dest << std::endl;
+            if(stop_drawing(dest)){
+                mapafigurica[dest]->setdraw(false);
+            }
             if(mapafigurica[src] != nullptr){
                 mapafigurica[src]->setField(dest);
                 mapafigurica[dest] = mapafigurica[src];
@@ -1020,6 +1080,9 @@ void key_callback1(GLFWwindow* window, int key, int scancode, int action, int mo
         if (key == GLFW_KEY_5 and action == GLFW_PRESS) {
             dest += "5";
             std::cout << dest << std::endl;
+            if(stop_drawing(dest)){
+                mapafigurica[dest]->setdraw(false);
+            }
             if(mapafigurica[src] != nullptr){
                 mapafigurica[src]->setField(dest);
                 mapafigurica[dest] = mapafigurica[src];
@@ -1031,6 +1094,9 @@ void key_callback1(GLFWwindow* window, int key, int scancode, int action, int mo
         if (key == GLFW_KEY_6 and action == GLFW_PRESS) {
             dest += "6";
             std::cout << dest << std::endl;
+            if(stop_drawing(dest)){
+                mapafigurica[dest]->setdraw(false);
+            }
             if(mapafigurica[src] != nullptr){
                 mapafigurica[src]->setField(dest);
                 mapafigurica[dest] = mapafigurica[src];
@@ -1042,6 +1108,9 @@ void key_callback1(GLFWwindow* window, int key, int scancode, int action, int mo
         if (key == GLFW_KEY_7 and action == GLFW_PRESS) {
             dest += "7";
             std::cout << dest << std::endl;
+            if(stop_drawing(dest)){
+                mapafigurica[dest]->setdraw(false);
+            }
             if(mapafigurica[src] != nullptr){
                 mapafigurica[src]->setField(dest);
                 mapafigurica[dest] = mapafigurica[src];
@@ -1053,6 +1122,9 @@ void key_callback1(GLFWwindow* window, int key, int scancode, int action, int mo
         if (key == GLFW_KEY_8 and action == GLFW_PRESS) {
             dest += "8";
             std::cout << dest << std::endl;
+            if(stop_drawing(dest)){
+                mapafigurica[dest]->setdraw(false);
+            }
             if(mapafigurica[src] != nullptr){
                 mapafigurica[src]->setField(dest);
                 mapafigurica[dest] = mapafigurica[src];
@@ -1106,6 +1178,17 @@ void drawModel (Model model1, Shader modelShader, float x, float y, float z){
     model1.Draw(modelShader);
 }
 
+void drawModelH(Model model1, Shader modelShader, float x, float y, float z){
+    glm::mat4 model = glm::mat4(1.0f);
+    model = glm::translate(model,glm::vec3(x, y, z)); // translate it down so it's at the center of the scene
+    model = glm::rotate(model, glm::radians(270.0f), glm::vec3(0.0f, -1.0f, 0.0f));
+    model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+    model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
+    model = glm::scale(model, glm::vec3(0.18f));    // it's a bit too big for our scene, so scale it down
+    modelShader.setMat4("model", model);
+    model1.Draw(modelShader);
+}
+
 unsigned int loadTexture(char const * path)
 {
     unsigned int textureID;
@@ -1141,5 +1224,14 @@ unsigned int loadTexture(char const * path)
     }
 
     return textureID;
+}
+
+bool stop_drawing(string field){
+    for(auto m : mapafigurica)
+    {
+        if(field == m.first)
+            return true;
+    }
+    return false;
 }
 

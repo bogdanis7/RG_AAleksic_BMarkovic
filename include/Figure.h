@@ -8,13 +8,16 @@
 class Figure {
 private:
     string field;
+    bool draw;
 
 public:
     ~Figure();
     Figure();
-    Figure(string field);
+    Figure(string field,bool draw);
     string getField();
     void setField(string new_field);
+    bool getdraw();
+    void setdraw(bool draw);
 
 };
 
