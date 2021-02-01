@@ -30,10 +30,9 @@ const unsigned int SCR_HEIGHT = 600;
 //inicijalizacija
 bool stop_drawing(string field);
 void drawModel(Model model1, Shader modelShader, float x, float y, float z);
-void drawModelH(Model model1, Shader modelShader, float x, float y, float z);
+void drawModelH(Model model1, Shader horseShader, float x, float y, float z);
 
 unsigned int loadTexture(char const * path);
-
 unsigned int loadCubemap(vector<string> vector);
 
 static Figure *f;
@@ -105,6 +104,7 @@ float lastFrame = 0.0f;
 float x5=3.8f;
 float y5=6.0f;
 float z5=3.5f;
+
 glm::vec3 lightPos=glm::vec3(x5, y5, z5);
 glm::vec3 lightDir(-0.2f, -1.0f, -0.3f);
 
@@ -333,6 +333,7 @@ glm::vec3 cubePositions[] = {
         Shader lightShader("resources/shaders/light.vs", "resources/shaders/light.fs");
         Shader modelShader("resources/shaders/model.vs", "resources/shaders/model.fs");
         Shader ourShader("resources/shaders/field.vs", "resources/shaders/field.fs");
+        Shader horseShader("resources/shaders/horse.vs", "resources/shaders/horse.fs");
 
         Model konjA(FileSystem::getPath("resources/objects/WoodenChess/12930_WoodenChessKnightSideA_v1_l3.obj"));
         Model lovacA(FileSystem::getPath("resources/objects/WoodenChessBishopSideA/WoodenChessBishop.obj"));
@@ -540,7 +541,6 @@ glm::vec3 cubePositions[] = {
 
         //tekstura za tablu
         unsigned int diffuseMap = loadTexture(FileSystem::getPath("resources/textures/chess4.png").c_str());
-
         unsigned int specularmap = loadTexture(FileSystem::getPath("resources/textures/chess42.jpg").c_str());
         boardShader.use();
         boardShader.setInt("material.diffuse", 0);
@@ -548,7 +548,7 @@ glm::vec3 cubePositions[] = {
 
         //tekstura za podlogu
         unsigned int texture2 = loadTexture(FileSystem::getPath("resources/textures/826a531ab12e32b4a908d516a5ae4ffd.jpeg").c_str());
-
+        //postavljamo teksture gde ih koristimo (usujemo sejdere)
         ourShader.use();
         ourShader.setInt("texture2", 0);
 
@@ -573,6 +573,7 @@ glm::vec3 cubePositions[] = {
             glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+
             boardShader.use();
             //aktiviranje shadera za veliki kvadrat
             glActiveTexture(GL_TEXTURE0);
@@ -594,7 +595,6 @@ glm::vec3 cubePositions[] = {
 
             // create transformations
             glm::mat4 model = glm::mat4(1.0f);
-
             glm::mat4 view = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
             glm::mat4 projection = glm::mat4(1.0f);
 
@@ -701,7 +701,7 @@ glm::vec3 cubePositions[] = {
             model = translate(model, glm::vec3(0.0f, -2.0f, -1.0f));
             model = scale(model, glm::vec3(8.0f, 2.0f, 6.0f));
             //azuriramo
-            pointLight.position = lightPos;
+
             modelShader.use();
 
 
@@ -716,18 +716,11 @@ glm::vec3 cubePositions[] = {
             modelShader.setMat4("projection", projection);
             modelShader.setMat4("view", view);
 
-
-
-
             if(f3->getdraw() == true)
                 drawModel(topA,modelShader,mapa[field3][0]-5.8f,mapa[field3][1],mapa[field3][2]-5.4f);
             if(f5->getdraw() == true)
                 drawModel(topA,modelShader,mapa[field5][0]-5.8f,mapa[field5][1],mapa[field5][2]-5.4f);
 
-            if(f->getdraw() == true)
-            drawModelH(konjA, modelShader, mapa[field1][0]-5.8f, mapa[field1][1], mapa[field1][2]-4.5f);
-            if(f2->getdraw() == true)
-            drawModelH(konjA, modelShader, mapa[field2][0]-5.8f, mapa[field2][1], mapa[field2][2]-4.5f);
 
             if(f4->getdraw() == true)
             drawModel(lovacA, modelShader, mapa[field4][0]-0.02f, mapa[field4][1], mapa[field4][2]-0.9f);
@@ -766,10 +759,7 @@ glm::vec3 cubePositions[] = {
             if(f18->getdraw()==true)
             drawModel(kraljicaB, modelShader, mapa[field18][0]-5.9f, mapa[field18][1], mapa[field18][2]-1.8f);
 
-            if(f20->getdraw()==true)
-            drawModelH(konjB, modelShader, mapa[field20][0]-0.18f, mapa[field20][1], mapa[field20][2]);
-            if(f21->getdraw() == true)
-            drawModelH(konjB, modelShader, mapa[field21][0]-0.18f, mapa[field21][1], mapa[field21][2]);
+
 
             if(f22->getdraw()==true)
             drawModel(lovacB, modelShader, mapa[field22][0]-5.9f, mapa[field22][1], mapa[field22][2]-3.5f);
@@ -807,12 +797,47 @@ glm::vec3 cubePositions[] = {
             modelShader.setFloat("pointLight.constant",pointLight.constant);
             modelShader.setFloat("pointLight.linear",pointLight.linear);
             modelShader.setFloat("pointLight.quadratic",pointLight.quadratic);
+
+            horseShader.use();
+
+            horseShader.setVec3("viewPosition", camera.Position);
+            horseShader.setFloat("material.shininess", 32.0f);
+            horseShader.setMat4("projection", projection);
+            horseShader.setMat4("view", view);
+
+
+            horseShader.setVec3("viewPosition", camera.Position);
+            horseShader.setFloat("material.shininess", 32.0f);
+            horseShader.setMat4("projection", projection);
+            horseShader.setMat4("view", view);
+
+            if(f->getdraw() == true)
+                drawModelH(konjA, horseShader, mapa[field1][0]-5.8f, mapa[field1][1], mapa[field1][2]-4.5f);
+            if(f2->getdraw() == true)
+                drawModelH(konjA, horseShader, mapa[field2][0]-5.8f, mapa[field2][1], mapa[field2][2]-4.5f);
+
+
+            if(f20->getdraw()==true)
+                drawModelH(konjB, horseShader, mapa[field20][0]-0.18f, mapa[field20][1], mapa[field20][2]);
+            if(f21->getdraw() == true)
+                drawModelH(konjB, horseShader, mapa[field21][0]-0.18f, mapa[field21][1], mapa[field21][2]);
+
+
+            pointLight.ambient = glm::vec3(1.2f, 1.2f, 1.2f);
+            horseShader.setVec3("pointLight.ambient",pointLight.ambient);
+            horseShader.setVec3("pointLight.position",pointLight.position);
+            horseShader.setVec3("pointLight.ambient",pointLight.ambient);
+            horseShader.setVec3("pointLight.diffuse",pointLight.diffuse);
+            horseShader.setVec3("pointLight.specular",pointLight.specular);
+            horseShader.setFloat("pointLight.constant",pointLight.constant);
+            horseShader.setFloat("pointLight.linear",pointLight.linear);
+            horseShader.setFloat("pointLight.quadratic",pointLight.quadratic);
             glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
             skyShader.use();
             view = glm::mat4(glm::mat3(camera.GetViewMatrix())); // remove translation from the view matrix
             skyShader.setMat4("view", view);
             projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, Z_NEAR, Z_FAR);
-
+            pointLight.position = glm::vec3(x5-4.0f,y5,z5-0.5f);
             skyShader.setMat4("projection", projection);
             // skybox cube
             glBindVertexArray(skyVAO);
@@ -848,8 +873,6 @@ glm::vec3 cubePositions[] = {
     void processInput(GLFWwindow *window) {
         if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
             glfwSetWindowShouldClose(window, true);
-
-
         float cameraSpeed = 2.0 * deltaTime;
         if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
             camera.Position += cameraSpeed * camera.Front;
@@ -1082,7 +1105,7 @@ void key_callback1(GLFWwindow* window, int key, int scancode, int action, int mo
                 mapafigurica[src] = nullptr;
             }
             ind = true;
-            x5=-3.8;
+            x5=-1*(x5);
         }
         if (key == GLFW_KEY_5 and action == GLFW_PRESS) {
             dest += "5";
@@ -1185,15 +1208,15 @@ void drawModel (Model model1, Shader modelShader, float x, float y, float z){
     model1.Draw(modelShader);
 }
 
-void drawModelH(Model model1, Shader modelShader, float x, float y, float z){
+void drawModelH(Model model1, Shader horseShader, float x, float y, float z){
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::translate(model,glm::vec3(x, y, z)); // translate it down so it's at the center of the scene
     model = glm::rotate(model, glm::radians(270.0f), glm::vec3(0.0f, -1.0f, 0.0f));
     model = glm::rotate(model, glm::radians(-100.0f), glm::vec3(1.0f, 0.0f, 0.0f));
     model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
     model = glm::scale(model, glm::vec3(0.18f));    // it's a bit too big for our scene, so scale it down
-    modelShader.setMat4("model", model);
-    model1.Draw(modelShader);
+    horseShader.setMat4("model", model);
+    model1.Draw(horseShader);
 }
 
 unsigned int loadTexture(char const * path)
