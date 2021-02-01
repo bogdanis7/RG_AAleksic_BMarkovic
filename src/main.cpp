@@ -23,7 +23,7 @@ void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void key_callback(GLFWwindow *window, int key, int scancode, int action, int mod);
 void scroll_callback(GLFWwindow *window, double xoffset, double yoffset);
 void processInput(GLFWwindow *window);
-// settings
+// podesavanje prozora
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
@@ -99,7 +99,7 @@ map<string,vector<float>> mapa; // mapa koja pravi A1 - 7 0 9
 map<string,Figure*> mapafigurica; // mapa koja cuva gde je kada koja figura
 
 // timing
-float deltaTime = 0.0f;    // time between current frame and last frame
+float deltaTime = 0.0f;    // vreme izmedju trenutnog frejma i poslednjeg
 float lastFrame = 0.0f;
 
 float x5=3.8f;
@@ -195,10 +195,6 @@ glm::vec3 cubePositions[] = {
        // kako ne bismo pravili za svaku figuru novu mapu - lakse ovako
 
         vector<char> s = {'A','B','C','D','E','F','G','H'};
-
-
-
-
         string pom = "";
         vector<float> vec(3);
         vector<string> niska;
@@ -545,7 +541,7 @@ glm::vec3 cubePositions[] = {
         //tekstura za tablu
         unsigned int diffuseMap = loadTexture(FileSystem::getPath("resources/textures/chess4.png").c_str());
 
-        unsigned int specularmap = loadTexture(FileSystem::getPath("resources/textures/chess4-ConvertImage.png").c_str());
+        unsigned int specularmap = loadTexture(FileSystem::getPath("resources/textures/chess42.jpg").c_str());
         boardShader.use();
         boardShader.setInt("material.diffuse", 0);
         boardShader.setInt("material.specular", 1);
@@ -644,13 +640,8 @@ glm::vec3 cubePositions[] = {
             // activate shader
             ourShader.use();
 
-            // pass projection matrix to shader (note that in this case it could change every frame)
-            //glm::mat4 projection = glm::perspective(glm::radians(fov), (float) SCR_WIDTH / (float) SCR_HEIGHT, 0.1f,
-             //                                       100.0f);
             ourShader.setMat4("projection", projection);
 
-            // camera/view transformation
-            //glm::mat4 view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
             ourShader.setMat4("view", view);
 
             string field1 = f->getField();
@@ -718,6 +709,13 @@ glm::vec3 cubePositions[] = {
             modelShader.setFloat("material.shininess", 32.0f);
             modelShader.setMat4("projection", projection);
             modelShader.setMat4("view", view);
+
+
+            modelShader.setVec3("viewPosition", camera.Position);
+            modelShader.setFloat("material.shininess", 32.0f);
+            modelShader.setMat4("projection", projection);
+            modelShader.setMat4("view", view);
+
 
 
 
