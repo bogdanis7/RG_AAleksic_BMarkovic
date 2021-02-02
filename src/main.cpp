@@ -6,7 +6,6 @@
 #include <vector>
 #include <string>
 #include "Figure.h"
-//#include "Figure.cpp"
 #include <learnopengl/filesystem.h>
 #include <learnopengl/shader_m.h>
 #include <learnopengl/model.h>
@@ -16,7 +15,7 @@
 #define Z_FAR 500.f
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
-void mouse_button_callback(GLFWwindow* window, double xpos, double ypos);
+//void mouse_button_callback(GLFWwindow* window, double xpos, double ypos);
 void key_callback1(GLFWwindow* window, int key, int scancode, int action, int mods);
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
@@ -28,6 +27,9 @@ const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
 //inicijalizacija
+std::string src;
+std::string dest;
+bool ind = true;
 bool stop_drawing(string field);
 void drawModel(Model model1, Shader modelShader, float x, float y, float z);
 void drawModelH(Model model1, Shader horseShader, float x, float y, float z);
@@ -81,10 +83,6 @@ struct PointLight {
     float quadratic;
 };
 
-
-vector<int> translate_ind;
-map<Figure *,bool> draw_ind;
-
 Camera camera(glm::vec3(0.5f, 3.0f, 16.0f));
 
 bool firstMouse = true;
@@ -101,12 +99,12 @@ map<string,Figure*> mapafigurica; // mapa koja cuva gde je kada koja figura
 float deltaTime = 0.0f;    // vreme izmedju trenutnog frejma i poslednjeg
 float lastFrame = 0.0f;
 
-float x5=3.8f;
+float x5=5.8f;
 float y5=6.0f;
 float z5=3.5f;
 
 glm::vec3 lightPos=glm::vec3(x5, y5, z5);
-glm::vec3 lightDir(-0.2f, -1.0f, -0.3f);
+glm::vec3 lightDir(-0.2f, -1.0f, -0.3f); // za direkciono
 
 glm::vec3 cubePositions[] = {
             glm::vec3(0.0f, 0.0f, 0.0f),
@@ -183,7 +181,7 @@ glm::vec3 cubePositions[] = {
             glm::vec3(4.0, 0.0f, 7.0f)
     };
 
-    int main() {
+     int main() {
         // glfw: initialize and configure
         // ------------------------------
         glfwInit();
@@ -197,25 +195,25 @@ glm::vec3 cubePositions[] = {
         vector<char> s = {'A','B','C','D','E','F','G','H'};
         string pom = "";
         vector<float> vec(3);
-        vector<string> niska;
+       // vector<string> niska;
 
+        // ovde pravimo mapu pozicija u koordinate gde treba figurice da stoje
         float x;
         float y = 0.5f;
         float z;
         int j = 9.0f;
-        for(char c : s){  // A1 7 0.5 9
+        for(char c : s){
             z = j;
             j--;
             x = 0;
             for(float i = 1 ; i <= 9; i++){
                 x = 8-i ;
-
                 vec = {x,y,z};
                 pom += c;
                 char p = i + '0';
                 pom+=p;
                 mapa[pom]=vec;
-                niska.push_back(pom);
+//                niska.push_back(pom);
                 pom = "";
             }
         }
@@ -264,7 +262,7 @@ glm::vec3 cubePositions[] = {
         mapafigurica["A1"] = f5;
         mapafigurica["D1"] = f6;
         mapafigurica["E1"] = f7;
-        mapafigurica["F1"]=f8;
+        mapafigurica["F1"]=  f8;
         mapafigurica["A2"] = f9;
         mapafigurica["B2"] = f10;
         mapafigurica["C2"] = f11;
@@ -272,7 +270,7 @@ glm::vec3 cubePositions[] = {
         mapafigurica["E2"] = f13;
         mapafigurica["F2"] = f14;
         mapafigurica["G2"] = f15;
-        mapafigurica["H2"]=f16;
+        mapafigurica["H2"] = f16;
         mapafigurica["E8"] = f17;
         mapafigurica["D8"] = f18;
         mapafigurica["A7"] = f19;
@@ -280,7 +278,7 @@ glm::vec3 cubePositions[] = {
         mapafigurica["G8"] = f21;
         mapafigurica["F8"] = f22;
         mapafigurica["C8"] = f23;
-        mapafigurica["B7"]= f24;
+        mapafigurica["B7"] = f24;
         mapafigurica["A8"] = f25;
         mapafigurica["H8"] = f26;
         mapafigurica["H7"] = f27;
@@ -288,7 +286,7 @@ glm::vec3 cubePositions[] = {
         mapafigurica["F7"] = f29;
         mapafigurica["E7"] = f30;
         mapafigurica["D7"] = f31;
-        mapafigurica["C7"]=f32;
+        mapafigurica["C7"] = f32;
 
 #ifdef __APPLE__
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
@@ -307,7 +305,6 @@ glm::vec3 cubePositions[] = {
         glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
         glfwSetCursorPosCallback(window, mouse_callback);
         glfwSetKeyCallback(window, key_callback1);
-
         glfwSetScrollCallback(window, scroll_callback);
 
         // tell GLFW to capture our mouse
@@ -350,7 +347,7 @@ glm::vec3 cubePositions[] = {
 
 
         PointLight pointLight;
-        pointLight.ambient = glm::vec3(1.7f, 1.7f, 1.7f);
+        pointLight.ambient = glm::vec3(1.2f, 1.2f, 1.2f);
         pointLight.diffuse = glm::vec3(1.0f, 1.0f, 1.0f);
         pointLight.specular = glm::vec3(0.5f, 0.5f, 0.5f);
         pointLight.constant = 1.0f;
@@ -548,7 +545,7 @@ glm::vec3 cubePositions[] = {
 
         //tekstura za podlogu
         unsigned int texture2 = loadTexture(FileSystem::getPath("resources/textures/826a531ab12e32b4a908d516a5ae4ffd.jpeg").c_str());
-        //postavljamo teksture gde ih koristimo (usujemo sejdere)
+
         ourShader.use();
         ourShader.setInt("texture2", 0);
 
@@ -579,7 +576,7 @@ glm::vec3 cubePositions[] = {
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, diffuseMap);
             glActiveTexture(GL_TEXTURE1);
-            glBindTexture(GL_TEXTURE_2D,specularmap);
+            glBindTexture(GL_TEXTURE_2D, specularmap);
 
 
 
@@ -694,8 +691,6 @@ glm::vec3 cubePositions[] = {
                 glDrawArrays(GL_TRIANGLES, 0, 36);
             }
 
-            //for figure in figures OVDE CE DA IDE
-
             // world transformation
             model = glm::mat4(1.0f);
             model = translate(model, glm::vec3(0.0f, -2.0f, -1.0f));
@@ -703,12 +698,12 @@ glm::vec3 cubePositions[] = {
             //azuriramo
 
             modelShader.use();
-
-
-            modelShader.setVec3("viewPosition", camera.Position);
-            modelShader.setFloat("material.shininess", 32.0f);
-            modelShader.setMat4("projection", projection);
-            modelShader.setMat4("view", view);
+//
+//
+//            modelShader.setVec3("viewPosition", camera.Position);
+//            modelShader.setFloat("material.shininess", 32.0f);
+//            modelShader.setMat4("projection", projection);
+//            modelShader.setMat4("view", view);
 
 
             modelShader.setVec3("viewPosition", camera.Position);
@@ -811,10 +806,22 @@ glm::vec3 cubePositions[] = {
             horseShader.setMat4("projection", projection);
             horseShader.setMat4("view", view);
 
+            horseShader.setVec3("pointLight.ambient",pointLight.ambient);
+            horseShader.setVec3("pointLight.position",pointLight.position);
+            horseShader.setVec3("pointLight.ambient",pointLight.ambient);
+            horseShader.setVec3("pointLight.diffuse",pointLight.diffuse);
+            horseShader.setVec3("pointLight.specular",pointLight.specular);
+            horseShader.setFloat("pointLight.constant",pointLight.constant);
+            horseShader.setFloat("pointLight.linear",pointLight.linear);
+            horseShader.setFloat("pointLight.quadratic",pointLight.quadratic);
+
             if(f->getdraw() == true)
                 drawModelH(konjA, horseShader, mapa[field1][0]-5.8f, mapa[field1][1], mapa[field1][2]-4.5f);
             if(f2->getdraw() == true)
                 drawModelH(konjA, horseShader, mapa[field2][0]-5.8f, mapa[field2][1], mapa[field2][2]-4.5f);
+
+            pointLight.ambient = glm::vec3(2.0f, 2.0f, 2.0f);
+            horseShader.setVec3("pointLight.ambient",pointLight.ambient);
 
 
             if(f20->getdraw()==true)
@@ -824,20 +831,13 @@ glm::vec3 cubePositions[] = {
 
 
             pointLight.ambient = glm::vec3(1.2f, 1.2f, 1.2f);
-            horseShader.setVec3("pointLight.ambient",pointLight.ambient);
-            horseShader.setVec3("pointLight.position",pointLight.position);
-            horseShader.setVec3("pointLight.ambient",pointLight.ambient);
-            horseShader.setVec3("pointLight.diffuse",pointLight.diffuse);
-            horseShader.setVec3("pointLight.specular",pointLight.specular);
-            horseShader.setFloat("pointLight.constant",pointLight.constant);
-            horseShader.setFloat("pointLight.linear",pointLight.linear);
-            horseShader.setFloat("pointLight.quadratic",pointLight.quadratic);
+
             glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
             skyShader.use();
             view = glm::mat4(glm::mat3(camera.GetViewMatrix())); // remove translation from the view matrix
             skyShader.setMat4("view", view);
             projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, Z_NEAR, Z_FAR);
-            pointLight.position = glm::vec3(x5-4.0f,y5,z5-0.5f);
+            pointLight.position = glm::vec3(x5-5.0f,y5,z5-2.5f);
             skyShader.setMat4("projection", projection);
             // skybox cube
             glBindVertexArray(skyVAO);
@@ -873,7 +873,7 @@ glm::vec3 cubePositions[] = {
     void processInput(GLFWwindow *window) {
         if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
             glfwSetWindowShouldClose(window, true);
-        float cameraSpeed = 2.0 * deltaTime;
+        float cameraSpeed = 1.5 * deltaTime;
         if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
             camera.Position += cameraSpeed * camera.Front;
         if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
@@ -883,11 +883,11 @@ glm::vec3 cubePositions[] = {
         if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
             camera.Position += glm::normalize(glm::cross(camera.Front, camera.Up)) * cameraSpeed;
 
-        if (glfwGetKey(window, GLFW_KEY_0) == GLFW_PRESS) {
-            if (glfwGetKey(window, GLFW_KEY_0) == GLFW_PRESS) {
-                cubePositions[0].x = 8.0;
-            }
-        }
+//        if (glfwGetKey(window, GLFW_KEY_0) == GLFW_PRESS) {
+//            if (glfwGetKey(window, GLFW_KEY_0) == GLFW_PRESS) {
+//                cubePositions[0].x = 8.0;
+//            }
+//        }
     }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
@@ -901,6 +901,7 @@ glm::vec3 cubePositions[] = {
 // glfw: whenever the mouse moves, this callback is called
 // -------------------------------------------------------
     void mouse_callback(GLFWwindow *window, double xpos, double ypos) {
+
         if (firstMouse) {
             lastX = xpos;
             lastY = ypos;
@@ -951,9 +952,7 @@ glm::vec3 cubePositions[] = {
         if (fov > 45.0f)
             fov = 45.0f;
     }
-    std::string src;
-    std::string dest;
-    bool ind = true;
+
 
 void key_callback1(GLFWwindow* window, int key, int scancode, int action, int mods) {
 
