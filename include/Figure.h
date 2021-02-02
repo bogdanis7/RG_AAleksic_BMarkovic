@@ -1,21 +1,21 @@
 //
 // Created by andri on 3.12.20..
 //
-
 #ifndef PROJECT_BASE_FIGURE_H
 #define PROJECT_BASE_FIGURE_H
+#include<string>
 
 class Figure {
 private:
-    string field;
+    std::string field;
     bool draw;
 
 public:
     ~Figure();
     Figure();
-    Figure(string field,bool draw);
-    string getField();
-    void setField(string new_field);
+    Figure(std::string field,bool draw);
+    std::string getField();
+    void setField(std::string new_field);
     bool getdraw();
     void setdraw(bool draw);
 

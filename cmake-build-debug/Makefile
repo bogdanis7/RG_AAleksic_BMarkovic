@@ -68,10 +68,10 @@ RM = /snap/clion/139/bin/cmake/linux/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/andri/Desktop/FINAL4/RG_AAleksic_BMarkovic
+CMAKE_SOURCE_DIR = /home/andri/Desktop/rgproj/RG_AAleksic_BMarkovic
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/andri/Desktop/FINAL4/RG_AAleksic_BMarkovic/cmake-build-debug
+CMAKE_BINARY_DIR = /home/andri/Desktop/rgproj/RG_AAleksic_BMarkovic/cmake-build-debug
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -100,9 +100,9 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/andri/Desktop/FINAL4/RG_AAleksic_BMarkovic/cmake-build-debug/CMakeFiles /home/andri/Desktop/FINAL4/RG_AAleksic_BMarkovic/cmake-build-debug/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/andri/Desktop/rgproj/RG_AAleksic_BMarkovic/cmake-build-debug/CMakeFiles /home/andri/Desktop/rgproj/RG_AAleksic_BMarkovic/cmake-build-debug/CMakeFiles/progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/andri/Desktop/FINAL4/RG_AAleksic_BMarkovic/cmake-build-debug/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/andri/Desktop/rgproj/RG_AAleksic_BMarkovic/cmake-build-debug/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -209,6 +209,33 @@ libs/stb_image.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/STB_IMAGE.dir/build.make CMakeFiles/STB_IMAGE.dir/libs/stb_image.cpp.s
 .PHONY : libs/stb_image.cpp.s
 
+src/Figure.o: src/Figure.cpp.o
+
+.PHONY : src/Figure.o
+
+# target to build an object file
+src/Figure.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project_base.dir/build.make CMakeFiles/project_base.dir/src/Figure.cpp.o
+.PHONY : src/Figure.cpp.o
+
+src/Figure.i: src/Figure.cpp.i
+
+.PHONY : src/Figure.i
+
+# target to preprocess a source file
+src/Figure.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project_base.dir/build.make CMakeFiles/project_base.dir/src/Figure.cpp.i
+.PHONY : src/Figure.cpp.i
+
+src/Figure.s: src/Figure.cpp.s
+
+.PHONY : src/Figure.s
+
+# target to generate assembly for a file
+src/Figure.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project_base.dir/build.make CMakeFiles/project_base.dir/src/Figure.cpp.s
+.PHONY : src/Figure.cpp.s
+
 src/main.o: src/main.cpp.o
 
 .PHONY : src/main.o
@@ -251,6 +278,9 @@ help:
 	@echo "... libs/stb_image.o"
 	@echo "... libs/stb_image.i"
 	@echo "... libs/stb_image.s"
+	@echo "... src/Figure.o"
+	@echo "... src/Figure.i"
+	@echo "... src/Figure.s"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"

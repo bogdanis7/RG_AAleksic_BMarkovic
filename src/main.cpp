@@ -5,12 +5,12 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <vector>
 #include <string>
+#include "Figure.h"
+//#include "Figure.cpp"
 #include <learnopengl/filesystem.h>
 #include <learnopengl/shader_m.h>
 #include <learnopengl/model.h>
 #include <iostream>
-#include "Figure.h"
-#include "Figure.cpp"
 #include <learnopengl/camera.h>
 #define Z_NEAR 0.1f
 #define Z_FAR 500.f

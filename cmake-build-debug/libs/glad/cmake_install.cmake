@@ -1,4 +1,4 @@
-# Install script for directory: /home/andri/Desktop/FINAL4/RG_AAleksic_BMarkovic/libs/glad
+# Install script for directory: /home/andri/Desktop/rgproj/RG_AAleksic_BMarkovic/libs/glad
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
