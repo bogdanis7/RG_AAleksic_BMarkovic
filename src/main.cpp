@@ -347,7 +347,7 @@ glm::vec3 cubePositions[] = {
 
 
         PointLight pointLight;
-        pointLight.ambient = glm::vec3(1.2f, 1.2f, 1.2f);
+        pointLight.ambient = glm::vec3(1.7f, 1.7f, 1.7f);
         pointLight.diffuse = glm::vec3(1.0f, 1.0f, 1.0f);
         pointLight.specular = glm::vec3(0.5f, 0.5f, 0.5f);
         pointLight.constant = 1.0f;
@@ -783,7 +783,7 @@ glm::vec3 cubePositions[] = {
             if(f19->getdraw() == true)
             drawModel(piunB, modelShader, mapa[field19][0]-4.9f, mapa[field19][1], mapa[field19][2]-5.13f);
 
-            pointLight.ambient = glm::vec3(1.2f, 1.2f, 1.2f);
+            pointLight.ambient = glm::vec3(1.7f, 1.7f, 1.7f);
             modelShader.setVec3("pointLight.ambient",pointLight.ambient);
             modelShader.setVec3("pointLight.position",pointLight.position);
             modelShader.setVec3("pointLight.ambient",pointLight.ambient);
@@ -830,14 +830,14 @@ glm::vec3 cubePositions[] = {
                 drawModelH(konjB, horseShader, mapa[field21][0]-0.18f, mapa[field21][1], mapa[field21][2]);
 
 
-            pointLight.ambient = glm::vec3(1.2f, 1.2f, 1.2f);
+            pointLight.ambient = glm::vec3(1.7f, 1.7f, 1.7f);
 
             glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
             skyShader.use();
             view = glm::mat4(glm::mat3(camera.GetViewMatrix())); // remove translation from the view matrix
             skyShader.setMat4("view", view);
             projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, Z_NEAR, Z_FAR);
-            pointLight.position = glm::vec3(x5-5.0f,y5,z5-2.5f);
+            pointLight.position = glm::vec3(x5,y5,z5);
             skyShader.setMat4("projection", projection);
             // skybox cube
             glBindVertexArray(skyVAO);
